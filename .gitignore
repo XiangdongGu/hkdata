@@ -1,0 +1,10 @@
+.DS_Store
+local/
+*.log
+*.gz
+*.aux
+*.out
+.Rproj.user/*
+.Rproj.user
+.Rhistory
+.Rprofile
