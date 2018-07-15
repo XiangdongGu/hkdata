@@ -64,4 +64,28 @@ get_file_jpg <- function(url, path = ".", view = TRUE) {
   }
 }
 
-
+#' Get json format file
+#'
+#' @param url the url of the file
+#' @param path the directory where the file should be save, if NULL it
+#' will not save
+#'
+#' @return it returns a data read from the json file
+#'
+#' @examples
+#' data <- get_file_csv("http://www.ha.org.hk/opendata/ipdpdd-en.json")
+#'
+#' @export
+#'
+get_file_json <- function(url, path = NULL) {
+  if (is.null(path)) {
+    path <- file.path(tempdir(), basename(url))
+    on.exit(unlink(path))
+  } else {
+    path <- file.path(path, basename(url))
+  }
+  download.file(url, path, quiet = TRUE)
+  cat(sprintf("Downloaded to %s\n", path))
+  data <- jsonlite::fromJSON(path)
+  data
+}
