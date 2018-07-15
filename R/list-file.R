@@ -10,13 +10,13 @@
 #' @param skip the first x number of records to omit
 #'
 #' @examples
-#' hist_file_list("2015-01-01", "2018-01-01")
+#' list_hist_file("2015-01-01", "2018-01-01")
 #'
-#' hist_file_list("2015-01-01", "2018-01-01", category = "health")
+#' list_hist_file("2015-01-01", "2018-01-01", category = "health")
 #'
 #' @export
 #'
-hist_file_list <- function(start, end, category = NULL, provider = NULL,
+list_hist_file <- function(start, end, category = NULL, provider = NULL,
                            format = NULL, search = NULL, order = NULL,
                            skip = NULL) {
   require(httr)
