@@ -25,7 +25,7 @@ list_hist_file(start, end, category = NULL, provider = NULL,
 \item{skip}{the first x number of records to omit}
 }
 \description{
-Historical Archive File list
+It lists at most max 500 results.
 }
 \examples{
 list_hist_file("2015-01-01", "2018-01-01")

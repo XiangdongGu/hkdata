@@ -8,3 +8,6 @@ local/
 .Rproj.user
 .Rhistory
 .Rprofile
+*.xls
+*.xlsx
+*.csv

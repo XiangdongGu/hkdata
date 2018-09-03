@@ -4,12 +4,14 @@
 \alias{get_file_xlsx}
 \title{Get xlsx format file}
 \usage{
-get_file_xlsx(url, path = ".")
+get_file_xlsx(url, path = ".", silent = FALSE)
 }
 \arguments{
 \item{url}{the url of the file}
 
 \item{path}{the directory where the file should be downloaded to}
+
+\item{silient}{whether or not silent message}
 }
 \description{
 Get xlsx format file

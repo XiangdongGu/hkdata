@@ -1,5 +1,7 @@
 #' Historical Archive File list
 #'
+#' It lists at most max 500 results.
+#'
 #' @param start start date of a period
 #' @param end end date of a period
 #' @param category Category ID, see website for a list of categories
@@ -37,3 +39,24 @@ list_hist_file <- function(start, end, category = NULL, provider = NULL,
   res <- GET(api_url, query = req)
   fromJSON(content(res, "text", encoding = "UTF-8"))$files
 }
+
+#' List all historical files without maximum
+#'
+#' It continuesly call list_hist_file until no result returned
+#'
+#' @param ... parameters passed to list_hist_file function
+#'
+list_hist_file_nomax <- function(...) {
+  max <- 500
+  result <- list()
+  i <- 0
+  while (TRUE) {
+    data <- list_hist_file(..., skip = i * max)
+    if (length(data) == 0 || is.null(data) || nrow(data) == 0) break
+    result <- rbind(result, data)
+    if (nrow(data) < max) break
+    i <- i + 1
+  }
+  result
+}
+

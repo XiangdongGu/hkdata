@@ -6,13 +6,15 @@
 #'
 #' @param url the url of the file
 #' @param path the directory where the file should be downloaded to
+#' @param silient whether or not silent message
 #'
 #' @export
 #'
-get_file_xlsx <- function(url, path = ".") {
+get_file_xlsx <- function(url, path = ".", silent = FALSE) {
   path <- file.path(path, basename(url))
   download.file(url, path, quiet = TRUE)
-  cat(sprintf("Downloaded to %s\n", path))
+  if (!silent) cat(sprintf("Downloaded to %s\n", path))
+  path
 }
 
 
