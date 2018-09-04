@@ -60,3 +60,40 @@ list_hist_file_nomax <- function(...) {
   result
 }
 
+#' Historical Archive File Version
+#'
+#' @param url url of the file
+#' @param start start date
+#' @param end end date
+#'
+#' @export
+#'
+hist_file_versions <- function(url, start, end) {
+  require(httr)
+  require(jsonlite)
+  api_url <- "https://api.data.gov.hk/v1/historical-archive/list-file-versions"
+  start <- format(as.Date(start), "%Y%m%d")
+  end <- format(as.Date(end), "%Y%m%d")
+  req <- list(
+    url = url,
+    start = start,
+    end = end
+  )
+  res <- GET(api_url, query = req)
+  fromJSON(content(res, "text", encoding = "UTF-8"))
+}
+
+#' Historical Archive File URL For A Specific Version
+#'
+#' @param url url of the historical files
+#' @param timestamp timestamp of the historical file to retrieve
+#'
+hist_file_url <- function(url, timestamp) {
+  api_url <- "https://api.data.gov.hk/v1/historical-archive/get-file"
+  sprintf(
+    "%s?url=%s&time=%s",
+    api_url,
+    URLencode(url, reserved = TRUE),
+    URLencode(timestamp, reserved = TRUE)
+  )
+}
