@@ -46,6 +46,8 @@ list_hist_file <- function(start, end, category = NULL, provider = NULL,
 #'
 #' @param ... parameters passed to list_hist_file function
 #'
+#' @export
+#'
 list_hist_file_nomax <- function(...) {
   max <- 500
   result <- list()
@@ -87,6 +89,8 @@ hist_file_versions <- function(url, start, end) {
 #'
 #' @param url url of the historical files
 #' @param timestamp timestamp of the historical file to retrieve
+#'
+#' @export
 #'
 hist_file_url <- function(url, timestamp) {
   api_url <- "https://api.data.gov.hk/v1/historical-archive/get-file"
