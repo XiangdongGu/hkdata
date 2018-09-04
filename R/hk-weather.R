@@ -36,8 +36,8 @@ weather_current <- function(timestamp = NULL) {
   humidity <- gsub(".+Humidity : ([[:digit:]]+) per.+",
                    "\\1", summy)
   list(
-    pubdae = pubdate,
-    temperature = as.numeric(tempture),
+    pubdate = pubdate,
+    temperature = as.numeric(temperature),
     humidity = as.numeric(humidity),
     temperature_area = tab
   )
