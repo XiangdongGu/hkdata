@@ -2,7 +2,7 @@
 % Please edit documentation in R/hk-ia.R
 \name{hkia_longterm_market}
 \alias{hkia_longterm_market}
-\title{HKIA: Market Statistics - L1 Individual Life Business}
+\title{HKIA: Market Statistics}
 \usage{
 hkia_longterm_market(year, table, path = ".", keep = FALSE)
 }
@@ -16,7 +16,7 @@ hkia_longterm_market(year, table, path = ".", keep = FALSE)
 \item{keep}{whether to keep the file after read}
 }
 \description{
-HKIA: Market Statistics - L1 Individual Life Business
+HKIA: Market Statistics
 }
 \details{
 The list of available tables:\cr

@@ -2,7 +2,7 @@
 # RETRIEVE HONG KONG INSURANCE AUTHORITY DATA
 #-----------------------------------------------------------------------------#
 
-#' HKIA: Market Statistics - L1 Individual Life Business
+#' HKIA: Market Statistics
 #'
 #' @param year year of the data
 #' @param table the table name L1 - L7
