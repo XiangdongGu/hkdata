@@ -13,9 +13,11 @@ list_hist_file(start = Sys.Date() - 1, end = Sys.Date() - 1,
 
 \item{end}{end date of a period}
 
-\item{category}{Category ID, see website for a list of categories}
+\item{category}{Category ID, see website for a list of categories,
+use \code{list_categories()} to see list of categories}
 
-\item{provider}{Provider ID, see website for a list of provider ID}
+\item{provider}{Provider ID, see website for a list of provider ID,
+use \code{list_providers()} to see list of providers}
 
 \item{format}{File format}
 

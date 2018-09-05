@@ -34,8 +34,10 @@ list_providers <- function() {
 #'
 #' @param start start date of a period
 #' @param end end date of a period
-#' @param category Category ID, see website for a list of categories
-#' @param provider Provider ID, see website for a list of provider ID
+#' @param category Category ID, see website for a list of categories,
+#' use \code{list_categories()} to see list of categories
+#' @param provider Provider ID, see website for a list of provider ID,
+#' use \code{list_providers()} to see list of providers
 #' @param format File format
 #' @param search keyword search
 #' @param order sort order
