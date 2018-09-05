@@ -1,10 +1,11 @@
 #-----------------------------------------------------------------------------#
 # HONG KONG WEATHER DATA
 #-----------------------------------------------------------------------------#
-#' Retrieve current/historical weather information
+
+#' Retrieve current and historical weather information
 #'
 #' @param timestamp if null then current, otherwise historical weather
-#' should be in format of %Y%m%d-%H%M, e.g. 20180905-0100
+#' should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
 #'
 #' @export
 #'

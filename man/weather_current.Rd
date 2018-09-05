@@ -2,14 +2,14 @@
 % Please edit documentation in R/hk-weather.R
 \name{weather_current}
 \alias{weather_current}
-\title{Retrieve current/historical weather information}
+\title{Retrieve current and historical weather information}
 \usage{
 weather_current(timestamp = NULL)
 }
 \arguments{
 \item{timestamp}{if null then current, otherwise historical weather
-should be in format of %Y%m%d-%H%M, e.g. 20180905-0100}
+should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100}
 }
 \description{
-Retrieve current/historical weather information
+Retrieve current and historical weather information
 }
