@@ -71,10 +71,11 @@ list_hist_file_nomax <- function(...) {
 #'
 #' @export
 #'
-hist_file_versions <- function(url, start, end) {
+hist_file_versions <- function(url, start, end = NULL) {
   require(httr)
   require(jsonlite)
   api_url <- "https://api.data.gov.hk/v1/historical-archive/list-file-versions"
+  if (is.null(end)) end <- start
   start <- format(as.Date(start), "%Y%m%d")
   end <- format(as.Date(end), "%Y%m%d")
   req <- list(
