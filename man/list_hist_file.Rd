@@ -4,8 +4,9 @@
 \alias{list_hist_file}
 \title{Historical Archive File list}
 \usage{
-list_hist_file(start, end, category = NULL, provider = NULL,
-  format = NULL, search = NULL, order = NULL, skip = NULL)
+list_hist_file(start = Sys.Date() - 1, end = Sys.Date() - 1,
+  category = NULL, provider = NULL, format = NULL, search = NULL,
+  order = NULL, skip = NULL)
 }
 \arguments{
 \item{start}{start date of a period}

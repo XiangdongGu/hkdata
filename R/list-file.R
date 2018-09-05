@@ -1,3 +1,33 @@
+#' List all available categories
+#'
+#' @export
+#'
+list_categories <- function() {
+  require(rvest)
+  require(httr)
+  require(dplyr)
+  url <- "https://data.gov.hk/en/help/api-spec"
+  tabs <- url %>% GET() %>% content() %>% html_table(fill = TRUE)
+  tabs[
+    sapply(tabs, function(x) grepl("Category", names(x[1]), ignore.case = TRUE))
+    ][[1]]
+}
+
+#' List all available providers
+#'
+#' @export
+#'
+list_providers <- function() {
+  require(rvest)
+  require(httr)
+  require(dplyr)
+  url <- "https://data.gov.hk/en/help/api-spec"
+  tabs <- url %>% GET() %>% content() %>% html_table(fill = TRUE)
+  tabs[
+    sapply(tabs, function(x) grepl("provider", names(x[1]), ignore.case = TRUE))
+    ][[1]]
+}
+
 #' Historical Archive File list
 #'
 #' It lists at most max 500 results.

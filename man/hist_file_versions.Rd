@@ -4,7 +4,7 @@
 \alias{hist_file_versions}
 \title{Historical Archive File Version}
 \usage{
-hist_file_versions(url, start, end)
+hist_file_versions(url, start, end = NULL)
 }
 \arguments{
 \item{url}{url of the file}
