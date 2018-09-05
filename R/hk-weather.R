@@ -31,6 +31,7 @@ weather_current <- function(timestamp = NULL) {
     tab <- tab %>%
       mutate(temperature = as.numeric(gsub("degrees|[[:punct:]]", "", temperature)))
   }
+  weather_symbol <- text %>% html_node("img") %>% html_attr("src")
   summy <- text %>% html_node("p") %>% html_text()
   temperature <- gsub(".+Air temperature : ([[:digit:]]+) degrees Celsius.+",
                       "\\1", summy)
@@ -38,6 +39,7 @@ weather_current <- function(timestamp = NULL) {
                    "\\1", summy)
   list(
     pubdate = pubdate,
+    weather_symbol = weather_symbol,
     temperature = as.numeric(temperature),
     humidity = as.numeric(humidity),
     temperature_area = tab
