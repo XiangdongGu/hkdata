@@ -18,7 +18,8 @@
 #'
 #' @export
 #'
-list_hist_file <- function(start, end, category = NULL, provider = NULL,
+list_hist_file <- function(start = Sys.Date() - 1, end = Sys.Date() - 1,
+                           category = NULL, provider = NULL,
                            format = NULL, search = NULL, order = NULL,
                            skip = NULL) {
   require(httr)
