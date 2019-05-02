@@ -1,7 +1,7 @@
 # R interface to retrieve data from Hong Kong Open Data
 
 ### Introduction
-This package provides easy to use R functions to work with [Hong Kong Open Data](https://github.com/XiangdongGu).
+This package provides easy to use R functions to work with [Hong Kong Open Data](https://data.gov.hk/en/).
 
 ### Installation
 ```
