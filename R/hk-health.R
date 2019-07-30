@@ -90,3 +90,52 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
   return(data)
 }
 
+#' Department of Health: Number of Notifiable Infectious Diseases by Month Share
+#' 
+#' Number of notifiable infectious diseases by month \cr
+#' \cr
+#' UPDATE FREQUENCY: MONTHLY
+#' 
+#' @param year year of the data
+#' @param path path to save the file
+#' 
+#' @format A data frame with 14 variables.
+#' * `disease`: Disease name
+#' * `jan`-`dec`: Number of cases in each month
+#' * `total`: Total number of cases in the year
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcdd-number-of-notifications-for-notifiable-infectious-diseases>
+#' 
+#' @export
+#' 
+notifiable_infectious_diseases <- function(year, path = ".") {
+  # Require
+  require(dplyr)
+  require(stringr)
+  # List historical files
+  keyword <- "Number of notifiable infectious diseases by month"
+  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  urls <- files %>%
+    mutate(
+      version = str_extract(`resource-name-en`, "([0-9]{4})"),
+      lang = str_remove_all(str_extract(`resource-name-en`, "\\([a-zA-Z]+\\)"), "\\W")
+    ) %>%
+    filter(lang == "English") %>% 
+    select(version, url)
+  # Check available years
+  available_years <- urls$version
+  if (!(year %in% available_years)) {
+    available_years <- paste0(available_years, collapse = ", ")
+    stop(sprintf("Data only available in year %s", available_years))
+  }
+  # Get csv file
+  url <- urls %>% filter(version == year) %>% pull(url)
+  # Parse data
+  data <- get_file_csv(url, path)
+  # Clean data
+  data <- data %>% 
+    rename_all(tolower) %>% 
+    filter(!grepl("^Total", disease))
+  # Return
+  return(data)
+}
