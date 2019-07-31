@@ -17,8 +17,8 @@ EV_charging_stations <- function(lat_in,long_in) {
   temp_file <- temp_file$results
 
   temp_file <- temp_file %>%
-    mutate(lat = unlist(lapply(1:length(test1), function(x){test1$'lat-long'[x][[1]][1]})),
-           long = unlist(lapply(1:length(test1), function(x){test1$'lat-long'[x][[1]][2]})),
+    mutate(lat = unlist(lapply(1:nrow(temp_file), function(x){temp_file$"lat-long"[x][[1]][1]})),
+           long = unlist(lapply(1:nrow(temp_file), function(x){temp_file$"lat-long"[x][[1]][2]})),
            distance = sqrt((lat-lat_in)^2+(long-long_in)^2))  %>%
     arrange(distance)
 
@@ -46,6 +46,7 @@ EV_charging_stations <- function(lat_in,long_in) {
 # UPDATE FREQUENCY: EVERY 5 MINUTES
 
 
+#Need consider how to show the possible timestamp
 
 #hist_file_versions(url = "https://www.mardep.gov.hk/e_files/en/opendata/arrival_en.csv",start = "2019-07-29")
 
@@ -59,6 +60,7 @@ Arrival_CrossBoundaryFerry <- function(timestamp){
   temp_file <-read.csv(url, sep = "|")
 
 }
+
 
 
 # #Example
@@ -92,3 +94,103 @@ Arrival_Flight <- function(date){
 
 test1 <- Arrival_Flight("2019-05-01")
 
+
+
+
+require(RJSONIO)  
+
+
+temp_file = RJSONIO::fromJSON(url) #get the list
+
+
+
+
+
+
+
+
+test1.1 <- as.data.frame(do.call("cbind", temp_file))
+
+
+test2 <- jsonlite::fromJSON(url) #get the data frame
+
+
+
+test2
+
+
+lapply(1:nrow(test2), function(x){ 
+  lapply(     )
+  
+  test2[[4]][[x]]}
+
+  
+  
+  
+  
+  test3 <- (test2[[4]][[2]])[[6]][[1]]
+  
+  
+  
+  
+  
+  
+  (test2[[4]][[2]])[[6]][[1]] %>%
+    mutate(destination = (test2[[4]][[2]])[[1]][[1]],
+            terminal = (test2[[4]][[2]])[[2]][[1]],
+           aisle = (test2[[4]][[2]])[[3]][[1]],
+           gate = (test2[[4]][[2]])[[4]][[1]], 
+           time = (test2[[4]][[2]])[[5]][[1]],
+           status = (test2[[4]][[2]])[[7]][[1]],
+           statusCode = (test2[[4]][[2]])[[8]][[1]])
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  lapply(c(1:10),
+         
+         function(x){
+           (test2[[4]][[2]])[[6]][[x]] %>%
+             mutate(destination = (test2[[4]][[2]])[[1]][[x]],
+                    terminal = (test2[[4]][[2]])[[2]][[x]],
+                    aisle = (test2[[4]][[2]])[[3]][[x]],
+                    gate = (test2[[4]][[2]])[[4]][[x]], 
+                    time = (test2[[4]][[2]])[[5]][[x]],
+                    status = (test2[[4]][[2]])[[7]][[x]],
+                    statusCode = (test2[[4]][[2]])[[8]][[x]]
+             )
+           
+           
+         }
+         
+         )
+  
+  
+  
+  (test2[[4]][[2]])[[6]][[1]] %>%
+    mutate(terminal = (test2[[4]][[2]])[[2]][[1]],
+           aisle = (test2[[4]][[2]])[[3]][[1]],
+           gate = (test2[[4]][[2]])[[4]][[1]], 
+           time = (test2[[4]][[2]])[[5]][[1]],
+           status = (test2[[4]][[2]])[[7]][[1]],
+           statusCode = (test2[[4]][[2]])[[8]][[1]])
+  for i in 1:length((test2[[4]][[2]])[[1]][[1]]) {
+    
+  }
+  destination = (test2[[4]][[2]])[[1]][[1]],
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -41,13 +41,15 @@
 #' @export
 #'
 inpatient_statistics <- function(year, path = ".", keep = FALSE) {
-  # Require
   require(dplyr)
   require(stringr)
   require(readxl)
   # List historical files
   keyword <- "Inpatient Discharges and Deaths in Hospitals and Registered Deaths in Hong Kong by Disease"
   files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Extract versions and urls
   urls <- files %>%
     mutate(version = str_extract(`resource-name-en`, "([0-9]{4})")) %>%
     select(version, url)
@@ -86,7 +88,6 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
       dx_grp = gsub("\r\n", " ", dx_grp),
     ) %>%
     within({ reg_dealth_unknown[is.na(reg_dealth_unknown)] <- 0 })
-  # Return
   return(data)
 }
 
@@ -109,12 +110,14 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 #' @export
 #' 
 notifiable_infectious_diseases <- function(year, path = ".") {
-  # Require
   require(dplyr)
   require(stringr)
   # List historical files
   keyword <- "Number of notifiable infectious diseases by month"
   files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Extract versions and urls
   urls <- files %>%
     mutate(
       version = str_extract(`resource-name-en`, "([0-9]{4})"),
@@ -131,11 +134,77 @@ notifiable_infectious_diseases <- function(year, path = ".") {
   # Get csv file
   url <- urls %>% filter(version == year) %>% pull(url)
   # Parse data
-  data <- get_file_csv(url, path)
+  data <- get_file_csv(url, path, col_types = readr::cols())
   # Clean data
   data <- data %>% 
     rename_all(tolower) %>% 
     filter(!grepl("^Total", disease))
-  # Return
   return(data)
 }
+
+#' Department of Health: Flu Express's Figures Data
+#' 
+#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season. \c
+#' \cr
+#' UPDATE FREQUENCY: WEEKLY
+#' 
+#' @param path path to save the file
+#' @param keep whether to keep the file after read
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-flu-express>
+#' 
+#' @export
+#' 
+flu_surveillance <- function(path = ".", keep = FALSE) {
+  require(dplyr)
+  require(stringr)
+  require(readxl)
+  # List historical files
+  keyword <- "Flu Express's figures data"
+  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Get excel file
+  url <- files$url[1]
+  fpath <- get_file_xlsx(url, path, silent = TRUE)
+  if (!keep) on.exit(unlink(fpath))
+  # Parse data
+  data <- suppressWarnings(read_excel(
+    fpath, skip = 3,
+    col_names = c(
+      "year",
+      "week",
+      "from",
+      "to",
+      "rate_ili_consult_sentinel_gopc",
+      "rate_ili_consult_sentinel_gp",
+      "n_inf_pos_lab_surv_a_h1",
+      "n_inf_pos_lab_surv_a_h3",
+      "n_inf_pos_lab_surv_b",
+      "n_inf_pos_lab_surv_c",
+      "n_inf_pos_lab_surv_all_subtypes",
+      "pct_inf_pos_lab_surv_a_h1",
+      "pct_inf_pos_lab_surv_a_h3",
+      "pct_inf_pos_lab_surv_b",
+      "pct_inf_pos_lab_surv_c",
+      "pct_inf_pos_lab_surv_all_subtypes",
+      "n_ili_scl_inst",
+      "rate_inf_adm_pub_hosp_0_5",
+      "rate_inf_adm_pub_hosp_6_11",
+      "rate_inf_adm_pub_hosp_12_17",
+      "rate_inf_adm_pub_hosp_18_49",
+      "rate_inf_adm_pub_hosp_50_64",
+      "rate_inf_adm_pub_hosp_65_abv",
+      "rate_inf_adm_pub_hosp_all",
+      "rate_ili_inf_aed_pub_hosp",
+      "pct_fever_kg_ccc",
+      "pct_fever_rche",
+      "rate_ili_consult_cmp",
+      "n_svr_inf_weekly_0_17",
+      "n_svr_inf_weekly_18_49",
+      "n_svr_inf_weekly_50_64",
+      "n_svr_inf_weekly_65_abv"
+    )
+  ))
+}
+
