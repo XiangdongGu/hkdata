@@ -41,6 +41,45 @@ aqhi_24hr <- function(timestamp = NULL) {
   list(header = res_headers, data = res_data)
 }
 
+#' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+#'
+#' @param timestamp if null then current, otherwise historical weather
+#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#'
+#' @export
+#'
+pollutant_24hr <- function(timestamp = NULL) {
+  require(rvest)
+  require(httr)
+  require(dplyr)
+  url <- "http://www.aqhi.gov.hk/epd/ddata/html/out/24pc_Eng.xml"
+  if (!is.null(timestamp)) {
+    valid <- strptime(timestamp, "%Y%m%d-%H%M")
+    if (is.na(valid)) stop("Invalid timestamp format")
+    url <- hist_file_url(url, timestamp)
+  }
+  res <- content(GET(url), encoding = 'UTF-8')
+  if (identical("NOT FOUND", res$message)) {
+    stop("Unable to retrieve information, input timestamp may not be available
+         - try to find the available timestamps.")
+  }
+  # pick out the components
+  res_headers <- sapply(c("title", "link", "description", "language", "copyright", "webMaster", "lastBuildDate"),
+                        FUN = function(n) {res %>% html_node(xpath = n) %>% html_text()},
+                        simplify = FALSE, USE.NAMES = TRUE)
+  res_items <- lapply(res %>% html_nodes(xpath = "PollutantConcentration"),
+                      function(n) {
+                        sapply(c("StationName", "DateTime", "NO2", "O3", "SO2", "CO", "PM10", "PM2.5"),
+                               function(x) {n %>% html_node(xpath = x) %>% html_text()},
+                               simplify = FALSE, USE.NAMES = TRUE) %>%
+                          data.frame(stringsAsFactors = FALSE)
+                      })
+  res_data <- do.call("rbind", res_items)
+  
+  list(header = res_headers, data = res_data)
+}
+
 #' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
 #' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
 #'
