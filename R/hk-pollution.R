@@ -343,3 +343,40 @@ past_aqhi <- function(year, month, path = NULL) {
   data %>% fill(Date)
 }
 
+#' URL for Towngas Environmental Performance Data
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+#'
+#' @param fromYear integer, the starting year of the performance data.
+#' @param toYear integer, the ending (inclusive) year of the performance data.
+#'
+#' @export
+#'
+towngas_performance_data_url <- function(fromYear, toYear = fromYear) {
+  if(floor(fromYear) != fromYear) stop("fromYear should be integer. Got ", fromYear)
+  if(floor(toYear) != toYear) stop("toYear should be integer. Got ", toYear)
+  sprintf(
+    "https://appapi.towngas.com/opendata/v1/environment/filter/%04d/%04d",
+    fromYear, toYear
+  )
+}
+
+#' Retrieve Towngas Environmental Performance Data
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+#'
+#' @param fromYear integer, the starting year of the performance data.
+#' @param toYear integer, the ending (inclusive) year of the performance data.
+#' @param path the directory where the raw file should be save, if NULL it
+#' will not be saved
+#'
+#' @export
+#'
+towngas_performance_data <- function(fromYear, toYear = fromYear, path = NULL) {
+  require(tidyr)
+  url <- towngas_performance_data_url(fromYear, toYear)
+  data <- get_file_json(url, path)
+  # the returned data has two levels of nesting after the default simplification
+  # of arrays of dataframe
+  unnest(unnest(data))
+}
