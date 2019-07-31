@@ -156,30 +156,30 @@ notifiable_infectious_diseases <- function(year, path = ".") {
 #' * `week`: Week
 #' * `from`: From (Date)
 #' * `to`: To (Date)
-#' * `rate_ili_consult_sentinel_gopc`: ILI consultation rate (per 1,000 consultations) - Sentinel GOPC
-#' * `rate_ili_consult_sentinel_gp`: ILI consultation rate (per 1,000 consultations) - Sentinel GP
-#' * `n_inf_pos_lab_surv_a_h1`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H1)
-#' * `n_inf_pos_lab_surv_a_h3`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H3)
-#' * `n_inf_pos_lab_surv_b`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - B
-#' * `n_inf_pos_lab_surv_c`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - C
-#' * `n_inf_pos_lab_surv_all_subtypes`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - All subtypes
-#' * `pct_inf_pos_lab_surv_a_h1`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H1)
-#' * `pct_inf_pos_lab_surv_a_h3`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H3)
-#' * `pct_inf_pos_lab_surv_b`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - B
-#' * `pct_inf_pos_lab_surv_c`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - C
-#' * `pct_inf_pos_lab_surv_all_subtypes`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - All subtypes
+#' * `rate_ili_gopc`: ILI consultation rate (per 1,000 consultations) - Sentinel general out-patient clinics (GOPC)
+#' * `rate_ili_gp`: ILI consultation rate (per 1,000 consultations) - Sentinel GP
+#' * `n_inf_lab_surv_a_h1`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H1)
+#' * `n_inf_lab_surv_a_h3`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H3)
+#' * `n_inf_lab_surv_b`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - B
+#' * `n_inf_lab_surv_c`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - C
+#' * `n_inf_lab_surv_all_subtypes`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - All subtypes
+#' * `pct_inf_lab_surv_a_h1`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H1)
+#' * `pct_inf_lab_surv_a_h3`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H3)
+#' * `pct_inf_lab_surv_b`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - B
+#' * `pct_inf_lab_surv_c`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - C
+#' * `pct_inf_lab_surv_all_subtypes`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - All subtypes
 #' * `n_ili_scl_inst`: No. of ILI outbreaks in schools/institutions
-#' * `rate_inf_adm_pub_hosp_0_5`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 0-5 years
-#' * `rate_inf_adm_pub_hosp_6_11`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 6-11 years
-#' * `rate_inf_adm_pub_hosp_12_17`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 12-17 years
-#' * `rate_inf_adm_pub_hosp_18_49`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 18-49 years
-#' * `rate_inf_adm_pub_hosp_50_64`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 50-64 years
-#' * `rate_inf_adm_pub_hosp_65_abv`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 65 years or above
-#' * `rate_inf_adm_pub_hosp_all`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - All ages
-#' * `rate_ili_inf_aed_pub_hosp`: ILI syndrome group in AED of public hospitals (per 1,000 coded cases)
-#' * `pct_fever_kg_ccc`: Percentage of children at sentinel KG/CCC having fever
+#' * `rate_inf_pub_hosp_0_5`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 0-5 years
+#' * `rate_inf_pub_hosp_6_11`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 6-11 years
+#' * `rate_inf_pub_hosp_12_17`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 12-17 years
+#' * `rate_inf_pub_hosp_18_49`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 18-49 years
+#' * `rate_inf_pub_hosp_50_64`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 50-64 years
+#' * `rate_inf_pub_hosp_65_abv`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 65 years or above
+#' * `rate_inf_pub_hosp_all`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - All ages
+#' * `rate_ili_inf_aed_pub_hosp`: ILI syndrome group in Accident & Emergency Department (AED) of public hospitals (per 1,000 coded cases)
+#' * `pct_fever_kg_ccc`: Percentage of children at sentinel kindergartens/child care centres KG/CCC having fever
 #' * `pct_fever_rche`: Percentage of residents at sentinel RCHE having fever
-#' * `rate_ili_consult_cmp`: ILI consultation rate at sentinel CMP (per 1,000 consultations)
+#' * `rate_ili_consult_cmp`: ILI consultation rate at sentinel Chinese medical practitioner (CMP) (per 1,000 consultations)
 #' * `n_svr_inf_weekly_0_17`: Weekly number of severe influenza cases by age groups - 0-17 years
 #' * `n_svr_inf_weekly_18_49`: Weekly number of severe influenza cases by age groups - 18-49 years
 #' * `n_svr_inf_weekly_50_64`: Weekly number of severe influenza cases by age groups - 50-64 years
@@ -188,7 +188,7 @@ notifiable_infectious_diseases <- function(year, path = ".") {
 #' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-flu-express>
 #' 
 #' @details
-#' * For `n_inf_pos_lab_surv_c` and `pct_inf_pos_lab_surv_c`, since week 7 of 2014 (week ending 10 Feb, 2014), 
+#' * For `n_inf_lab_surv_c` and `pct_inf_lab_surv_c`, since week 7 of 2014 (week ending 10 Feb, 2014), 
 #' the Public Health Laboratory Services Branch has adopted new genetic tests
 #' as the primary tests for various respiratory viruses including influenza C.
 #' * For all `n_svr_inf_weekly_`, the surveillance system for severe influenza cases among 
@@ -218,26 +218,26 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
       "week",
       "from",
       "to",
-      "rate_ili_consult_sentinel_gopc",
-      "rate_ili_consult_sentinel_gp",
-      "n_inf_pos_lab_surv_a_h1",
-      "n_inf_pos_lab_surv_a_h3",
-      "n_inf_pos_lab_surv_b",
-      "n_inf_pos_lab_surv_c",
-      "n_inf_pos_lab_surv_all_subtypes",
-      "pct_inf_pos_lab_surv_a_h1",
-      "pct_inf_pos_lab_surv_a_h3",
-      "pct_inf_pos_lab_surv_b",
-      "pct_inf_pos_lab_surv_c",
-      "pct_inf_pos_lab_surv_all_subtypes",
+      "rate_ili_gopc",
+      "rate_ili_gp",
+      "n_inf_lab_surv_a_h1",
+      "n_inf_lab_surv_a_h3",
+      "n_inf_lab_surv_b",
+      "n_inf_lab_surv_c",
+      "n_inf_lab_surv_all_subtypes",
+      "pct_inf_lab_surv_a_h1",
+      "pct_inf_lab_surv_a_h3",
+      "pct_inf_lab_surv_b",
+      "pct_inf_lab_surv_c",
+      "pct_inf_lab_surv_all_subtypes",
       "n_ili_scl_inst",
-      "rate_inf_adm_pub_hosp_0_5",
-      "rate_inf_adm_pub_hosp_6_11",
-      "rate_inf_adm_pub_hosp_12_17",
-      "rate_inf_adm_pub_hosp_18_49",
-      "rate_inf_adm_pub_hosp_50_64",
-      "rate_inf_adm_pub_hosp_65_abv",
-      "rate_inf_adm_pub_hosp_all",
+      "rate_inf_pub_hosp_0_5",
+      "rate_inf_pub_hosp_6_11",
+      "rate_inf_pub_hosp_12_17",
+      "rate_inf_pub_hosp_18_49",
+      "rate_inf_pub_hosp_50_64",
+      "rate_inf_pub_hosp_65_abv",
+      "rate_inf_pub_hosp_all",
       "rate_ili_inf_aed_pub_hosp",
       "pct_fever_kg_ccc",
       "pct_fever_rche",
@@ -252,8 +252,8 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
   data <- data %>% 
     filter(grepl("^[0-9]{4}$", year) & !is.na(week)) %>% 
     within({ 
-      pct_inf_pos_lab_surv_c[pct_inf_pos_lab_surv_c == "-"] <- NA
-      n_inf_pos_lab_surv_c[n_inf_pos_lab_surv_c == "-"] <- NA
+      pct_inf_lab_surv_c[pct_inf_lab_surv_c == "-"] <- NA
+      n_inf_lab_surv_c[n_inf_lab_surv_c == "-"] <- NA
     })
   return(data)
 }
