@@ -380,3 +380,22 @@ towngas_performance_data <- function(fromYear, toYear = fromYear, path = NULL) {
   # of arrays of dataframe
   unnest(unnest(data))
 }
+
+#' Retrieve Real-time city data collected by multi-purpose lamp posts in Kowloon East
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
+#' Note that only the most update value is available.
+#'
+#'#' @param path the directory where the raw file should be save, if NULL it
+#' will not be saved
+#' 
+#' @export
+#'
+lamp_posts_data <- function(path = NULL) {
+  require(tidyr)
+  url <- "https://mplpssl.wisx.io/nodered/getlampposts/"
+  data <- get_file_json(url, path)
+  # the returned data has one level of nesting after the default simplification
+  # of arrays of dataframe
+  unnest(data)
+}
