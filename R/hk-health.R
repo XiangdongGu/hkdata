@@ -51,10 +51,9 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
     paste0(year, ".xlsx")
   )
   # Parse data
-  tryCatch({
-    fpath <- get_file_xlsx(url, path, silent = TRUE)
-  },
-  error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  tryCatch(
+    {fpath <- get_file_xlsx(url, path, silent = TRUE)},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
   )
   if (!keep) on.exit(unlink(fpath))
   data <- read_excel(
@@ -109,10 +108,9 @@ notifiable_infectious_diseases <- function(year, path = ".") {
   if (!grepl("[0-9]{4}", year)) stop("Invalid year format.")
   url <- sprintf("https://www.chp.gov.hk/files/misc/nid%sen.csv", year)
   # Parse data
-  tryCatch({
-    data <- get_file_csv(url, path, col_types = readr::cols())
-  },
-  error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  tryCatch(
+    {data <- get_file_csv(url, path, col_types = readr::cols())},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
   )
   # Clean data
   data <- data %>% 
