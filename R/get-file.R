@@ -31,7 +31,7 @@ get_file_xlsx <- function(url, path = ".", silent = FALSE) {
 #'
 #' @export
 #'
-get_file_csv <- function(url, path = NULL) {
+get_file_csv <- function(url, path = NULL, col_names = TRUE, col_types = NULL) {
   require(readr)
   if (is.null(path)) {
     path <- file.path(tempdir(), basename(url))
@@ -41,7 +41,7 @@ get_file_csv <- function(url, path = NULL) {
   }
   download.file(url, path, quiet = TRUE)
   cat(sprintf("Downloaded to %s\n", path))
-  data <- read_csv(path)
+  data <- read_csv(path, col_name = col_names, col_types = col_types)
   data
 }
 
