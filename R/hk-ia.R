@@ -146,4 +146,31 @@ hkia_longterm_insurer <- function(year, table, path = ".", keep = FALSE) {
   data
 }
 
+#' Quarterly Release of Provisional Statistics for Long Term Business.
+#' Results are cumulative
+#' 
+hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) {
+  require(readxl)
+  require(dplyr)
+  year <- year %% 100
+  url <- sprintf(paste0("https://www.ia.org.hk/en/infocenter/statistics/",
+                "files/%sq%slong.xls"), quarter, year)
+  fpath <- get_file_xlsx(url, path, silent = TRUE)
+  if (!keep) on.exit(unlink(fpath))
+  
+  parse_header <- function(rows, sheet) {
+    if (is.character(rows)) return(rows)
+    rg <- cell_limits(c(min(rows), 3), c(max(rows), NA))
+    d <- read_excel(fpath, sheet, rg, col_names = FALSE)
+    d <- data.frame(t(d), stringsAsFactors = FALSE)
+    f <- function(x) zoo::na.locf(x, na.rm = FALSE)
+    d <- d %>% mutate_all(f)
+    apply(d, 1, paste0, collapse = "")
+  }
+  
+  # Read and parse sheets-------------------------------------------#
+  data <- read_excel(fpath, "Table L1", skip = 6)
+  
+  
+}
 
