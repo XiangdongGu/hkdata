@@ -19,8 +19,11 @@
 #' 10	D403	Domestic Households by Monthly Domestic Household Income and Small Tertiary Planning Unit Group, 2006 (D403) [English]
 #' 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English]
 
+#' @export 
+#' 
 
-# hk_census_stpug <- function(){}
+
+hk_census_stpug <- function(table_no){
   require(rvest)
   require(dplyr)
   require(tidyverse)
@@ -52,7 +55,7 @@
 
   # Download the file to temp folder
   path <- tempdir()
-  fpath <- file.path(path, basename(by_TPU$url))
+  fpath <- file.path(path, basename(by_tpu$url))
   by_tpu_dt <- lapply(fpath, read_csv, col_name = FALSE)
   
   # formatting and clean the data
@@ -139,16 +142,24 @@
              suppressWarnings(as.numeric(occupied_quarters)))
   
 # search list  
+dt <- sprintf("dt_%s", seq(1:11))
 keywords_list <- sapply(dt, function(x) names(get(x)))
-keywords_max <- seq_len(max(sapply(tblnames, length)))
+keywords_max <- seq_len(max(sapply(keywords_list, length)))
 keywords <- t(sapply(keywords_list, "[", i = keywords_max)) %>% as_tibble()
 
-search_list <- cbind(tbl = names(tblnames), keywords, by_tpu) %>%
+search_list <- cbind(tbl = names(keywords_list), keywords, by_tpu) %>%
   mutate(keywords = paste(V1,V2,V3,V4, sep = " / ", na.rm = TRUE)) %>%
-  select(- starts_with("V"))
+  select(- starts_with("V")) %>%
+  mutate(tbl = as.character(tbl))
 
+search_tbl_name <- search_list[search_list$tbl_no == table_no,1]
+search_tbl <- get(search_tbl_name)
 
-# need to improve hte search function
+return(search_tbl)
+}
+
+#' @example 
+hk_census_stpug("A501")
 
 
 
