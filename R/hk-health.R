@@ -291,3 +291,36 @@ ev_surveillance <- function(path = ".", keep = FALSE) {
   data <- data %>% filter(grepl("^[0-9]{4}$", year) & !is.na(week)) 
   return(data)
 }
+
+#' Hospital Authority: Accident and Emergency Waiting Time by Hospital
+#'
+#' Accident and emergency waiting time by hospital. \cr
+#' \cr
+#' UPDATE FREQUENCY: EVERY 15 MINUTES
+#' 
+#' @param timestamp if null then current, otherwise historical waiting time
+#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20190101-2315
+#' minutes %M only available at 0, 15, 30, 45
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hospital-hadata-ae-waiting-time>
+#'
+#' @export
+#' 
+ae_wait_time <- function(timestamp = NULL, path = ".") {
+  require(dplyr)
+  require(stringr)
+  # Get url
+  url <- "http://www.ha.org.hk/opendata/aed/aedwtdata-en.json"
+  if (!is.null(timestamp)) {
+    if (is.na(strptime(timestamp, "%Y%m%d-%H%M"))) stop("Invalid timestamp format.")
+    url <- hist_file_url(url, timestamp)
+  }
+  # Parse data
+  tryCatch(
+    {data <- get_file_json(url, path)},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
+  # Clean data
+  data <- data$waitTime %>% rename(hosp_name = hospName, top_wait = topWait)
+  return(data)
+}
