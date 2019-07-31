@@ -233,3 +233,56 @@ aqhi_range_forecast <- function(timestamp = NULL) {
   #
   list(header = res_headers, data = rbind(res_current_data, res_forecast_data))
 }
+
+#' URL for Past hourly record of Air Pollution Index at a given year and month
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+#' Only available from July 1999 to Decemenber 2013.
+#'
+#' @param year year of the past record
+#' @param month month of the past record
+#'
+#' @export
+#'
+past_pollution_index_url <- function(year, month) {
+  if(floor(month)!=month || month < 1 || month > 12) stop("Month should be integer from 1 to 12. Got ", month)
+  sprintf(
+    "http://www.aqhi.gov.hk/api_history/download/hourly/eng/hr%02d%04d.csv",
+    month,
+    year
+  )
+}
+
+#' Retrieve Past hourly record of Air Pollution Index at a given year and month
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+#' Only available from July 1999 to Decemenber 2013.
+#'
+#' @param year year of the past record
+#' @param month month of the past record
+#' @param path the directory where the raw file should be save, if NULL it
+#' will not be saved
+#'
+#' @export
+#'
+past_pollution_index <- function(year, month, path = NULL) {
+  require(readr)
+  require(tidyr)
+  
+  url <- past_pollution_index_url(year, month)
+  if (is.null(path)) {
+    path <- file.path(tempdir(), basename(url))
+    on.exit(unlink(path))
+  } else {
+    path <- file.path(path, basename(url))
+  }
+  download.file(url, path, quiet = TRUE)
+  # since the file contains variable number of rows (ranging from 8 to 10) before the header row,
+  # so use grep to find the first row with header, containing "Date"
+  r <- read_lines(path, n_max = 15)
+  dt <- min(grep("^Date", r))
+  
+  data <- read_csv(path, skip = dt - 1)
+  # still some clean up needed, only hour 0 has Date, the Date for other hours are omitted
+  data %>% fill(Date)
+}
