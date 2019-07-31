@@ -313,6 +313,7 @@ ae_wait_time <- function(timestamp = NULL, path = ".") {
   url <- "http://www.ha.org.hk/opendata/aed/aedwtdata-en.json"
   if (!is.null(timestamp)) {
     if (is.na(strptime(timestamp, "%Y%m%d-%H%M"))) stop("Invalid timestamp format.")
+    if (!grepl("(00|15|30|45)$", timestamp)) stop("Timestamp should ends in 00, 15, 30, or 45.")
     url <- hist_file_url(url, timestamp)
   }
   # Parse data
