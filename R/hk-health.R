@@ -258,3 +258,70 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
   return(data)
 }
 
+#' Department of Health: EV Scan's Figures Data
+#' 
+#' Hand, foot and mouth disease surveillance data including number of EV71 cases, 
+#' institutional outbreaks, hospital surveillance and sentinel surveillance. \cr
+#' \cr
+#' UPDATE FREQUENCY: WEEKLY
+#' 
+#' @param path path to save the file
+#' @param keep whether to keep the file after read
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcdde-ev-scan>
+#' 
+#' @format A data frame with 11 variables.
+#' * `year`: Year
+#' * `week`: Week
+#' * `from`: From (Date)
+#' * `to`: To (Date)
+#' * `n_ev71`: Number of EV71 cases by week
+#' * `n_hfmd_inst`: Number of HFMD institutional outbreaks by week
+#' * `n_hfmd_hosp_adm`: Number of hospital admission episodes of HFMD by week
+#' * `rate_hfmd_aed`: Accident & Emergency Department surveillance of HFMD syndrome group (per 1000 coded cases)
+#' * `prop_hfmd_ccc_kg`: Proportion of child care centres/kindergartens (CCC/KG) with HFMD cases based on HFMD sentinel surveillance at CCC/KG by week
+#' * `rate_hfmd_pvt_med`: Consultation rate for HFMD based on HFMD sentinel surveillance among private medical practitioner clinics by week (per 1000 consultations) 
+#' * `rate_hfmd_gopc`: Consultation rate for HFMD based on HFMD sentinel surveillance among General Out-patient Clinics by week (per 1000 consultations)
+#' 
+#' @details
+#' * Recent data are provisional figures and subject to further revision.
+#' 
+#' @export
+#' 
+ev_surveillance <- function(path = ".", keep = FALSE) {
+  require(dplyr)
+  require(stringr)
+  require(readxl)
+  # List historical files
+  keyword <- "EV Scan's figures data"
+  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Get excel file
+  url <- files$url[1]
+  fpath <- get_file_xlsx(url, path, silent = TRUE)
+  if (!keep) on.exit(unlink(fpath))
+  # Parse data
+  data <- suppressWarnings(read_excel(
+    fpath, skip = 2,
+    col_names = c(
+      "year",
+      "week",
+      "from",
+      "to",
+      "n_ev71",
+      "n_hfmd_inst",
+      "n_hfmd_hosp_adm",
+      "rate_hfmd_aed",
+      "prop_hfmd_ccc_kg",
+      "rate_hfmd_pvt_med",
+      "rate_hfmd_gopc"
+    ),
+    col_types = c(
+      "guess", "numeric", rep("date", 2), rep("numeric", 4), "text", rep("numeric", 2)
+    )
+  ))
+  # Clean data
+  data <- data %>% filter(grepl("^[0-9]{4}$", year) & !is.na(week)) 
+  return(data)
+}
