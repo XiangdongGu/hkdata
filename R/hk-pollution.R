@@ -282,7 +282,64 @@ past_pollution_index <- function(year, month, path = NULL) {
   r <- read_lines(path, n_max = 15)
   dt <- min(grep("^Date", r))
   
-  data <- read_csv(path, skip = dt - 1)
+  # not sure if the fields may have something like "4*", so read as characters to be safe
+  data <- read_csv(path, skip = dt - 1, col_types = cols(.default = "c"))
   # still some clean up needed, only hour 0 has Date, the Date for other hours are omitted
   data %>% fill(Date)
 }
+
+#' URL for Past record of Air Quality Health Index
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+#' Only available from Decemenber 2013 onward.
+#'
+#' @param year year of the past record
+#' @param month month of the past record
+#'
+#' @export
+#'
+past_aqhi_url <- function(year, month) {
+  if(floor(month)!=month || month < 1 || month > 12) stop("Month should be integer from 1 to 12. Got ", month)
+  sprintf(
+    "http://www.aqhi.gov.hk/epd/ddata/html/history/%04d/%04d%02d_Eng.csv",
+    year,
+    year,
+    month
+  )
+}
+
+#' Retrieve Past record of Air Quality Health Index
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+#' Only available from Decemenber 2013 onward.
+#'
+#' @param year year of the past record
+#' @param month month of the past record
+#' @param path the directory where the raw file should be save, if NULL it
+#' will not be saved
+#'
+#' @export
+#'
+past_aqhi <- function(year, month, path = NULL) {
+  require(readr)
+  require(tidyr)
+  
+  url <- past_aqhi_url(year, month)
+  if (is.null(path)) {
+    path <- file.path(tempdir(), basename(url))
+    on.exit(unlink(path))
+  } else {
+    path <- file.path(path, basename(url))
+  }
+  download.file(url, path, quiet = TRUE)
+  # the files all have the header at line 8, but would still use the dynamic approach to be sure.
+  # to use grep to find the first row with header, containing "Date"
+  r <- read_lines(path, n_max = 15)
+  dt <- min(grep("^Date", r))
+  # the fields for aqhi are not all numeric, some are "6*", so keep them as character
+  # even "Hour" has "Daily Max", so not numeric
+  data <- read_csv(path, skip = dt - 1, col_types = cols(.default = "c"))
+  # still some clean up needed, only hour 1 has Date, the Date for other hours are omitted
+  data %>% fill(Date)
+}
+
