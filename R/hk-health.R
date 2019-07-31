@@ -8,7 +8,7 @@
 #' \cr
 #' UPDATE FREQUENCY: AS AND WHEN NECESSARY									
 #'
-#' @param year year of the data
+#' @param year year of the data  (available since 2012)
 #' @param path path to save the file
 #' @param keep whether to keep the file after read
 #'
@@ -44,26 +44,19 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
-  # List historical files
-  keyword <- "Inpatient Discharges and Deaths in Hospitals and Registered Deaths in Hong Kong by Disease"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Extract versions and urls
-  urls <- files %>%
-    mutate(version = str_extract(`resource-name-en`, "([0-9]{4})")) %>%
-    select(version, url)
-  # Check available years
-  available_years <- urls$version
-  if (!(year %in% available_years)) {
-    available_years <- paste0(available_years, collapse = ", ")
-    stop(sprintf("Data only available in year %s", available_years))
-  }
-  # Get excel file
-  url <- urls %>% filter(version == year) %>% pull(url)
-  fpath <- get_file_xlsx(url, path, silent = TRUE)
-  if (!keep) on.exit(unlink(fpath))
+  # Get url
+  if (!grepl("[0-9]{4}", year)) stop("Invalid year format.")
+  url <- paste0(
+    "http://www.dh.gov.hk/datagovhk/ncdd/Number%20of%20Inpatient%20Discharges%20and%20Deaths%20in%20Hospitals%20and%20Registered%20Deaths%20in%20Hong%20Kong%20by%20Disease%20", 
+    paste0(year, ".xlsx")
+  )
   # Parse data
+  tryCatch({
+    fpath <- get_file_xlsx(url, path, silent = TRUE)
+  },
+  error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
+  if (!keep) on.exit(unlink(fpath))
   data <- read_excel(
     fpath, skip = 7,
     col_names = c(
@@ -97,7 +90,7 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 #' \cr
 #' UPDATE FREQUENCY: MONTHLY
 #' 
-#' @param year year of the data
+#' @param year year of the data (available since 1997)
 #' @param path path to save the file
 #' 
 #' @format A data frame with 14 variables.
@@ -112,33 +105,21 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 notifiable_infectious_diseases <- function(year, path = ".") {
   require(dplyr)
   require(stringr)
-  # List historical files
-  keyword <- "Number of notifiable infectious diseases by month"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Extract versions and urls
-  urls <- files %>%
-    mutate(
-      version = str_extract(`resource-name-en`, "([0-9]{4})"),
-      lang = str_remove_all(str_extract(`resource-name-en`, "\\([a-zA-Z]+\\)"), "\\W")
-    ) %>%
-    filter(lang == "English") %>% 
-    select(version, url)
-  # Check available years
-  available_years <- urls$version
-  if (!(year %in% available_years)) {
-    available_years <- paste0(available_years, collapse = ", ")
-    stop(sprintf("Data only available in year %s", available_years))
-  }
-  # Get csv file
-  url <- urls %>% filter(version == year) %>% pull(url)
+  # Get url
+  if (!grepl("[0-9]{4}", year)) stop("Invalid year format.")
+  url <- sprintf("https://www.chp.gov.hk/files/misc/nid%sen.csv", year)
   # Parse data
-  data <- get_file_csv(url, path, col_types = readr::cols())
+  tryCatch({
+    data <- get_file_csv(url, path, col_types = readr::cols())
+  },
+  error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
   # Clean data
   data <- data %>% 
     rename_all(tolower) %>% 
-    filter(!grepl("^Total", disease))
+    filter(!grepl("^Total", disease)) %>% 
+    mutate_all(list(~na_if(., "-"))) %>% 
+    mutate_at(vars(jan:total), as.numeric)
   return(data)
 }
 
@@ -201,16 +182,11 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
-  # List historical files
-  keyword <- "Flu Express's figures data"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Get excel file
-  url <- files$url[1]
+  # Get url
+  url <- "http://www.chp.gov.hk/files/xls/flux_data.xlsx"
+  # Parse data
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
-  # Parse data
   data <- suppressWarnings(read_excel(
     fpath, skip = 3,
     col_names = c(
@@ -251,10 +227,7 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
   # Clean data
   data <- data %>% 
     filter(grepl("^[0-9]{4}$", year) & !is.na(week)) %>% 
-    within({ 
-      pct_inf_lab_surv_c[pct_inf_lab_surv_c == "-"] <- NA
-      n_inf_lab_surv_c[n_inf_lab_surv_c == "-"] <- NA
-    })
+    mutate_all(list(~na_if(., "-")))
   return(data)
 }
 
@@ -292,16 +265,11 @@ ev_surveillance <- function(path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
-  # List historical files
-  keyword <- "EV Scan's figures data"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Get excel file
-  url <- files$url[1]
+  # Get url
+  url <- "http://www.chp.gov.hk/files/xls/evscan_data.xlsx"
+  # Parse data
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
-  # Parse data
   data <- suppressWarnings(read_excel(
     fpath, skip = 2,
     col_names = c(
