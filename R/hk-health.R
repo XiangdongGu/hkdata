@@ -41,13 +41,15 @@
 #' @export
 #'
 inpatient_statistics <- function(year, path = ".", keep = FALSE) {
-  # Require
   require(dplyr)
   require(stringr)
   require(readxl)
   # List historical files
   keyword <- "Inpatient Discharges and Deaths in Hospitals and Registered Deaths in Hong Kong by Disease"
   files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Extract versions and urls
   urls <- files %>%
     mutate(version = str_extract(`resource-name-en`, "([0-9]{4})")) %>%
     select(version, url)
@@ -86,7 +88,6 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
       dx_grp = gsub("\r\n", " ", dx_grp),
     ) %>%
     within({ reg_dealth_unknown[is.na(reg_dealth_unknown)] <- 0 })
-  # Return
   return(data)
 }
 
@@ -109,12 +110,14 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 #' @export
 #' 
 notifiable_infectious_diseases <- function(year, path = ".") {
-  # Require
   require(dplyr)
   require(stringr)
   # List historical files
   keyword <- "Number of notifiable infectious diseases by month"
   files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
+  # Check file availability
+  if (length(files) == 0) stop("Failed to retrive historical data.")
+  # Extract versions and urls
   urls <- files %>%
     mutate(
       version = str_extract(`resource-name-en`, "([0-9]{4})"),
@@ -136,6 +139,7 @@ notifiable_infectious_diseases <- function(year, path = ".") {
   data <- data %>% 
     rename_all(tolower) %>% 
     filter(!grepl("^Total", disease))
-  # Return
   return(data)
 }
+
+
