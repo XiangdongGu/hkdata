@@ -35,7 +35,7 @@ inpatient_statistics_url <- function(year) {
 #'
 #' @export
 #'
-inpatient_statistics_retrieve <- function(url, path = NULL, keep = FALSE) {
+inpatient_statistics_retrieve <- function(url, path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
@@ -110,7 +110,7 @@ inpatient_statistics_retrieve <- function(url, path = NULL, keep = FALSE) {
 #'
 #' @export
 #'
-inpatient_statistics <- function(year, path = NULL, keep = FALSE) {
+inpatient_statistics <- function(year, path = ".", keep = FALSE) {
   url <- inpatient_statistics_url(year)
   data <- inpatient_statistics_retrieve(url, path, keep)
   return(data)
@@ -213,7 +213,7 @@ flu_surveillance_url <- function() {
 #' 
 #' @export
 #' 
-flu_surveillance_retrieve <- function(url, path = NULL, keep = FALSE) {
+flu_surveillance_retrieve <- function(url, path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
@@ -319,7 +319,7 @@ flu_surveillance_retrieve <- function(url, path = NULL, keep = FALSE) {
 #' 
 #' @export
 #' 
-flu_surveillance <- function(path = NULL, keep = FALSE) {
+flu_surveillance <- function(path = ".", keep = FALSE) {
   url <- flu_surveillance_url()
   data <- flu_surveillance_retrieve(url, path, keep)
   return(data)
@@ -354,7 +354,7 @@ ev_surveillance_url <- function() {
 #'
 #' @export 
 #'
-ev_surveillance_retrieve <- function(url, path = NULL, keep = FALSE) {
+ev_surveillance_retrieve <- function(url, path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
@@ -415,7 +415,7 @@ ev_surveillance_retrieve <- function(url, path = NULL, keep = FALSE) {
 #'
 #' @export 
 #'
-ev_surveillance <- function(path = NULL, keep = FALSE) {
+ev_surveillance <- function(path = ".", keep = FALSE) {
   url <- ev_surveillance_url()
   data <- ev_surveillance_retrieve(url, path, keep)
   return(data)
@@ -480,4 +480,3 @@ ae_wait_time <- function(timestamp = NULL, path = NULL) {
   data <- ae_wait_time_retrieve(data_url, path)
   return(data)
 }
-
