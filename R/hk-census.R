@@ -1,31 +1,34 @@
 #-----------------------------------------------------------------------------#
-# RETRIEVE HONG KONG CENSUS DATA (TPU Level)
+# RETRIEVE HONG KONG CENSUS DATA (STPUG Level)
 #-----------------------------------------------------------------------------#
 
-#' HK 2006 Population Census: Domestic Households Number
+#' HK 2006 Population Census: by Small Tertiary Planning Unit Group (STPUG)
 #'
-#' @description 
-#' Domestic Households by Monthly Domestic Household Income and Small Tertiary Planning Unit Group, 2006
-#' 
 #' @details
-#' The income group:
-#' income_group_1	  < $2,000
-#' income_group_2	  $2,000 - $3,999
-#' income_group_3	  $4,000 - $5,999
-#' income_group_4	  $6,000 - $7,999
-#' income_group_5	  $8,000 - $9,999
-#' income_group_6	  $10,000 - $14,999
-#' income_group_7	  $15,000 - $19,999
-#' income_group_8	  $20,000 - $24,999
-#' income_group_9	  $25,000 - $29,999
-#' income_group_10	$30,000 - $39,999
-#' income_group_11	$40,000 - $59,999
-#' income_group_12	$60,000+
+#' totally got 11 cencus statistics tables at STPUG level: 
+#' No Table_No Table_Description
+#' 1	A501	Hong Kong Resident Population by Ethnicity and Small Tertiary Planning Unit Group, 2006 (A501) [English]
+#' 2	A502	Hong Kong Resident Population Aged 5 and Over by Usual Language and Small Tertiary Planning Unit Group, 2006 (A502) [English]
+#' 3	A503	Hong Kong Resident Population by Broad Age Group, Sex and Small Tertiary Planning Unit Group, 2006 (A503) [English]
+#' 4	C501	Hong Kong Resident Population by Economic Activity Status and Small Tertiary Planning Unit Group, 2006 (C501) [English]
+#' 5	C502	Working Population by Industry [Sector] and Small Tertiary Planning Unit Group, 2006 (C502) [English]
+#' 6	C503	Working Population by Occupation [Major Group] and Small Tertiary Planning Unit Group, 2006 (C503) [English]
+#' 7	C504	Working Population by Monthly Income from Main Employment and Small Tertiary Planning Unit Group, 2006 (C504) [English]
+#' 8	D401	Domestic Households by Household Size and Small Tertiary Planning Unit Group, 2006 (D401) [English]
+#' 9	D402	Domestic Households by Household Composition and Small Tertiary Planning Unit Group, 2006 (D402) [English]
+#' 10	D403	Domestic Households by Monthly Domestic Household Income and Small Tertiary Planning Unit Group, 2006 (D403) [English]
+#' 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English]
 
-hk_census_tpu <- function(){
+#' @export 
+#' 
+
+
+hk_census_stpug <- function(table_no){
   require(rvest)
   require(dplyr)
-  # find URL for data download
+  require(tidyverse)
+  
+  # find URL for all census data download
   url <- "https://data.gov.hk/en-data/dataset/hk-censtatd-06c_csv_en-2006-population-bycensus-statistical-tables-csv-en"
   page <- read_html(url)
 
@@ -45,42 +48,119 @@ hk_census_tpu <- function(){
                    url = all_links )
 
   # URL for TPU level data
-  by_TPU <- master %>%
-    filter(str_detect(tolower(tbl_name),"small tertiary planning unit group"))
+  by_tpu <- master %>%
+    filter(str_detect(tolower(tbl_name),"small tertiary planning unit group")) %>%
+    mutate(tbl_no = substr(tbl_name, nchar(tbl_name) - 14, nchar(tbl_name) - 11)) %>%
+    select(tbl_no, tbl_name, url)
 
   # Download the file to temp folder
-  fpath <- get_file_xlsx(by_TPU$url[10], path, silent = TRUE)
-  dt <- read_csv(fpath, col_name = FALSE)
+  path <- tempdir()
+  fpath <- file.path(path, basename(by_tpu$url))
+  by_tpu_dt <- lapply(fpath, read_csv, col_name = FALSE)
   
   # formatting and clean the data
-  dt_name <- str_c(dt[1,1], dt[2,1], sep = " / ")
-  dt_c <- dt[5:209,1:13]
-  names(dt_c) <- c("stpug", sprintf("income_group_%s", seq(1:12)))
+  # 1 - A501
+  dt_1 <- by_tpu_dt[[1]][5:209,1:3] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[1]][3,2:3]))) %>%
+    gather("ethnicity", "resident_population_number", - c(stpug)) %>%
+    mutate(resident_population_number = 
+             suppressWarnings(as.numeric(resident_population_number)))
+
+  # 2 - A502
+  dt_2 <- by_tpu_dt[[2]][6:210,1:3] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[1]][3,2:3]))) %>%
+    gather("language", "resident_population_number", - c(stpug)) %>%
+    mutate(resident_population_number = 
+            suppressWarnings(as.numeric(resident_population_number)))
+  
+  # 3	- A503
+  dt_3 <- by_tpu_dt[[3]][6:620,1:9] %>%
+    `colnames<-`(c("stpug", "sex", as.character(by_tpu_dt[[3]][4,3:9]))) %>%
+    gather("age_group", "resident_population_number", - c(stpug, sex)) %>%
+    mutate(resident_population_number = 
+             suppressWarnings(as.numeric(resident_population_number)))
+  
+  # 4	- C501
+  dt_4 <- by_tpu_dt[[4]][5:209,1:9] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[4]][3,3:9]))) %>%
+    gather("economic_activity_status", "resident_population_number", - stpug) %>%
+    mutate(resident_population_number = 
+             suppressWarnings(as.numeric(resident_population_number)))
+  
+  # 5	- C502
+  dt_5 <- by_tpu_dt[[5]][5:209,1:8] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[5]][3,3:8]))) %>%
+    gather("industry", "working_population_number", - stpug) %>%
+    mutate(working_population_number = 
+             suppressWarnings(as.numeric(working_population_number)))
+  
+  
+  # 6	- C503
+  dt_6 <- by_tpu_dt[[6]][5:209,1:11] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[6]][3,2:11]))) %>%
+    gather("occupation", "working_population_number", - stpug) %>%
+    mutate(working_population_number = 
+             suppressWarnings(as.numeric(working_population_number)))
+  
+  
+  # 7	- C504
+  dt_7 <- by_tpu_dt[[7]][5:209,1:12] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[7]][3,2:12]))) %>%
+    gather("monthly_income_from_main_employment", "working_population_number", 
+           - stpug) %>%
+    mutate(working_population_number = 
+             suppressWarnings(as.numeric(working_population_number)))
+  
+  # 8	- D401
+  dt_8 <- by_tpu_dt[[8]][5:209,1:7] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[8]][3,2:7]))) %>%
+    gather("household_size", "domestic_households_number", - stpug) %>%
+    mutate(domestic_households_number = 
+             suppressWarnings(as.numeric(domestic_households_number)))
+  
+  
+  # 9	- D402
+  dt_9 <- by_tpu_dt[[9]][5:209,1:8] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[9]][3,2:8]))) %>%
+    gather("household_composition", "domestic_households_number", - stpug) %>%
+    mutate(domestic_households_number = 
+             suppressWarnings(as.numeric(domestic_households_number)))
+  
+  # 10 - D403
+  dt_10 <- by_tpu_dt[[10]][5:209,1:13] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[10]][3,2:13]))) %>%
+    gather("monthly_domestic_household_income", "domestic_households_number", 
+           - stpug) %>%
+    mutate(domestic_households_number = 
+             suppressWarnings(as.numeric(domestic_households_number)))
+  
+  # 11 - E501
+  dt_11 <- by_tpu_dt[[11]][5:209,1:5] %>%
+    `colnames<-`(c("stpug", as.character(by_tpu_dt[[11]][3,2:5]))) %>%
+    gather("quarter_type", "occupied_quarters", - stpug) %>%
+    mutate(occupied_quarters = 
+             suppressWarnings(as.numeric(occupied_quarters)))
+  
+# search list  
+dt <- sprintf("dt_%s", seq(1:11))
+keywords_list <- sapply(dt, function(x) names(get(x)))
+keywords_max <- seq_len(max(sapply(keywords_list, length)))
+keywords <- t(sapply(keywords_list, "[", i = keywords_max)) %>% as_tibble()
+
+search_list <- cbind(tbl = names(keywords_list), keywords, by_tpu) %>%
+  mutate(keywords = paste(V1,V2,V3,V4, sep = " / ", na.rm = TRUE)) %>%
+  select(- starts_with("V")) %>%
+  mutate(tbl = as.character(tbl))
+
+search_tbl_name <- search_list[search_list$tbl_no == table_no,1]
+search_tbl <- get(search_tbl_name)
+
+return(search_tbl)
 }
 
-library(dplyr)
-library(rvest)
-library(httr)
-library(tidyverse)
-library(tidytext)
+#' @example 
+hk_census_stpug("A501")
 
-
-
-
-
-
-
-
-keyword <- by_TPU %>%
-  select(tbl_name) %>%
-  unnest_tokens(word, tbl_name) %>%
-  anti_join(stop_words, by = "word") %>%
-  count(word, sort = TRUE)
-
-
-
-
-#maybe do all tables, summarize a list by table name in ()
 
 
 

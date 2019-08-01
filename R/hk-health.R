@@ -8,7 +8,7 @@
 #' \cr
 #' UPDATE FREQUENCY: AS AND WHEN NECESSARY									
 #'
-#' @param year year of the data
+#' @param year year of the data  (available since 2012)
 #' @param path path to save the file
 #' @param keep whether to keep the file after read
 #'
@@ -44,26 +44,18 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
-  # List historical files
-  keyword <- "Inpatient Discharges and Deaths in Hospitals and Registered Deaths in Hong Kong by Disease"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Extract versions and urls
-  urls <- files %>%
-    mutate(version = str_extract(`resource-name-en`, "([0-9]{4})")) %>%
-    select(version, url)
-  # Check available years
-  available_years <- urls$version
-  if (!(year %in% available_years)) {
-    available_years <- paste0(available_years, collapse = ", ")
-    stop(sprintf("Data only available in year %s", available_years))
-  }
-  # Get excel file
-  url <- urls %>% filter(version == year) %>% pull(url)
-  fpath <- get_file_xlsx(url, path, silent = TRUE)
-  if (!keep) on.exit(unlink(fpath))
+  # Get url
+  if (!grepl("[0-9]{4}", year)) stop("Invalid year format.")
+  url <- paste0(
+    "http://www.dh.gov.hk/datagovhk/ncdd/Number%20of%20Inpatient%20Discharges%20and%20Deaths%20in%20Hospitals%20and%20Registered%20Deaths%20in%20Hong%20Kong%20by%20Disease%20", 
+    paste0(year, ".xlsx")
+  )
   # Parse data
+  tryCatch(
+    {fpath <- get_file_xlsx(url, path, silent = TRUE)},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
+  if (!keep) on.exit(unlink(fpath))
   data <- read_excel(
     fpath, skip = 7,
     col_names = c(
@@ -97,7 +89,7 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 #' \cr
 #' UPDATE FREQUENCY: MONTHLY
 #' 
-#' @param year year of the data
+#' @param year year of the data (available since 1997)
 #' @param path path to save the file
 #' 
 #' @format A data frame with 14 variables.
@@ -112,33 +104,20 @@ inpatient_statistics <- function(year, path = ".", keep = FALSE) {
 notifiable_infectious_diseases <- function(year, path = ".") {
   require(dplyr)
   require(stringr)
-  # List historical files
-  keyword <- "Number of notifiable infectious diseases by month"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Extract versions and urls
-  urls <- files %>%
-    mutate(
-      version = str_extract(`resource-name-en`, "([0-9]{4})"),
-      lang = str_remove_all(str_extract(`resource-name-en`, "\\([a-zA-Z]+\\)"), "\\W")
-    ) %>%
-    filter(lang == "English") %>% 
-    select(version, url)
-  # Check available years
-  available_years <- urls$version
-  if (!(year %in% available_years)) {
-    available_years <- paste0(available_years, collapse = ", ")
-    stop(sprintf("Data only available in year %s", available_years))
-  }
-  # Get csv file
-  url <- urls %>% filter(version == year) %>% pull(url)
+  # Get url
+  if (!grepl("[0-9]{4}", year)) stop("Invalid year format.")
+  url <- sprintf("https://www.chp.gov.hk/files/misc/nid%sen.csv", year)
   # Parse data
-  data <- get_file_csv(url, path, col_types = readr::cols())
+  tryCatch(
+    {data <- get_file_csv(url, path, col_types = readr::cols())},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
   # Clean data
   data <- data %>% 
     rename_all(tolower) %>% 
-    filter(!grepl("^Total", disease))
+    filter(!grepl("^Total", disease)) %>% 
+    mutate_all(list(~na_if(., "-"))) %>% 
+    mutate_at(vars(jan:total), as.numeric)
   return(data)
 }
 
@@ -151,7 +130,49 @@ notifiable_infectious_diseases <- function(year, path = ".") {
 #' @param path path to save the file
 #' @param keep whether to keep the file after read
 #' 
+#' @format A data frame with 32 variables.
+#' * `year`: Year
+#' * `week`: Week
+#' * `from`: From (Date)
+#' * `to`: To (Date)
+#' * `rate_ili_gopc`: ILI consultation rate (per 1,000 consultations) - Sentinel general out-patient clinics (GOPC)
+#' * `rate_ili_gp`: ILI consultation rate (per 1,000 consultations) - Sentinel GP
+#' * `n_inf_lab_surv_a_h1`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H1)
+#' * `n_inf_lab_surv_a_h3`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - A(H3)
+#' * `n_inf_lab_surv_b`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - B
+#' * `n_inf_lab_surv_c`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - C
+#' * `n_inf_lab_surv_all_subtypes`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - All subtypes
+#' * `pct_inf_lab_surv_a_h1`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H1)
+#' * `pct_inf_lab_surv_a_h3`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H3)
+#' * `pct_inf_lab_surv_b`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - B
+#' * `pct_inf_lab_surv_c`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - C
+#' * `pct_inf_lab_surv_all_subtypes`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - All subtypes
+#' * `n_ili_scl_inst`: No. of ILI outbreaks in schools/institutions
+#' * `rate_inf_pub_hosp_0_5`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 0-5 years
+#' * `rate_inf_pub_hosp_6_11`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 6-11 years
+#' * `rate_inf_pub_hosp_12_17`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 12-17 years
+#' * `rate_inf_pub_hosp_18_49`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 18-49 years
+#' * `rate_inf_pub_hosp_50_64`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 50-64 years
+#' * `rate_inf_pub_hosp_65_abv`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 65 years or above
+#' * `rate_inf_pub_hosp_all`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - All ages
+#' * `rate_ili_inf_aed_pub_hosp`: ILI syndrome group in Accident & Emergency Department (AED) of public hospitals (per 1,000 coded cases)
+#' * `pct_fever_kg_ccc`: Percentage of children at sentinel kindergartens/child care centres KG/CCC having fever
+#' * `pct_fever_rche`: Percentage of residents at sentinel RCHE having fever
+#' * `rate_ili_consult_cmp`: ILI consultation rate at sentinel Chinese medical practitioner (CMP) (per 1,000 consultations)
+#' * `n_svr_inf_weekly_0_17`: Weekly number of severe influenza cases by age groups - 0-17 years
+#' * `n_svr_inf_weekly_18_49`: Weekly number of severe influenza cases by age groups - 18-49 years
+#' * `n_svr_inf_weekly_50_64`: Weekly number of severe influenza cases by age groups - 50-64 years
+#' * `n_svr_inf_weekly_65_abv`: Weekly number of severe influenza cases by age groups - 65 years or above
+#' 
 #' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-flu-express>
+#' 
+#' @details
+#' * For `n_inf_lab_surv_c` and `pct_inf_lab_surv_c`, since week 7 of 2014 (week ending 10 Feb, 2014), 
+#' the Public Health Laboratory Services Branch has adopted new genetic tests
+#' as the primary tests for various respiratory viruses including influenza C.
+#' * For all `n_svr_inf_weekly_`, the surveillance system for severe influenza cases among 
+#' adult patients aged 18 years or above was only activated intermittently during influenza seasons before 2018.
+#' * All data of the recent few weeks are provisional figures and subject to further revision.
 #' 
 #' @export
 #' 
@@ -159,16 +180,11 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
   require(dplyr)
   require(stringr)
   require(readxl)
-  # List historical files
-  keyword <- "Flu Express's figures data"
-  files <- list_hist_file(Sys.Date() - 1, Sys.Date() - 1, search = keyword)
-  # Check file availability
-  if (length(files) == 0) stop("Failed to retrive historical data.")
-  # Get excel file
-  url <- files$url[1]
+  # Get url
+  url <- "http://www.chp.gov.hk/files/xls/flux_data.xlsx"
+  # Parse data
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
-  # Parse data
   data <- suppressWarnings(read_excel(
     fpath, skip = 3,
     col_names = c(
@@ -176,26 +192,26 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
       "week",
       "from",
       "to",
-      "rate_ili_consult_sentinel_gopc",
-      "rate_ili_consult_sentinel_gp",
-      "n_inf_pos_lab_surv_a_h1",
-      "n_inf_pos_lab_surv_a_h3",
-      "n_inf_pos_lab_surv_b",
-      "n_inf_pos_lab_surv_c",
-      "n_inf_pos_lab_surv_all_subtypes",
-      "pct_inf_pos_lab_surv_a_h1",
-      "pct_inf_pos_lab_surv_a_h3",
-      "pct_inf_pos_lab_surv_b",
-      "pct_inf_pos_lab_surv_c",
-      "pct_inf_pos_lab_surv_all_subtypes",
+      "rate_ili_gopc",
+      "rate_ili_gp",
+      "n_inf_lab_surv_a_h1",
+      "n_inf_lab_surv_a_h3",
+      "n_inf_lab_surv_b",
+      "n_inf_lab_surv_c",
+      "n_inf_lab_surv_all_subtypes",
+      "pct_inf_lab_surv_a_h1",
+      "pct_inf_lab_surv_a_h3",
+      "pct_inf_lab_surv_b",
+      "pct_inf_lab_surv_c",
+      "pct_inf_lab_surv_all_subtypes",
       "n_ili_scl_inst",
-      "rate_inf_adm_pub_hosp_0_5",
-      "rate_inf_adm_pub_hosp_6_11",
-      "rate_inf_adm_pub_hosp_12_17",
-      "rate_inf_adm_pub_hosp_18_49",
-      "rate_inf_adm_pub_hosp_50_64",
-      "rate_inf_adm_pub_hosp_65_abv",
-      "rate_inf_adm_pub_hosp_all",
+      "rate_inf_pub_hosp_0_5",
+      "rate_inf_pub_hosp_6_11",
+      "rate_inf_pub_hosp_12_17",
+      "rate_inf_pub_hosp_18_49",
+      "rate_inf_pub_hosp_50_64",
+      "rate_inf_pub_hosp_65_abv",
+      "rate_inf_pub_hosp_all",
       "rate_ili_inf_aed_pub_hosp",
       "pct_fever_kg_ccc",
       "pct_fever_rche",
@@ -206,5 +222,106 @@ flu_surveillance <- function(path = ".", keep = FALSE) {
       "n_svr_inf_weekly_65_abv"
     )
   ))
+  # Clean data
+  data <- data %>% 
+    filter(grepl("^[0-9]{4}$", year) & !is.na(week)) %>% 
+    mutate_all(list(~na_if(., "-")))
+  return(data)
 }
 
+#' Department of Health: EV Scan's Figures Data
+#' 
+#' Hand, foot and mouth disease surveillance data including number of EV71 cases, 
+#' institutional outbreaks, hospital surveillance and sentinel surveillance. \cr
+#' \cr
+#' UPDATE FREQUENCY: WEEKLY
+#' 
+#' @param path path to save the file
+#' @param keep whether to keep the file after read
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcdde-ev-scan>
+#' 
+#' @format A data frame with 11 variables.
+#' * `year`: Year
+#' * `week`: Week
+#' * `from`: From (Date)
+#' * `to`: To (Date)
+#' * `n_ev71`: Number of EV71 cases by week
+#' * `n_hfmd_inst`: Number of HFMD institutional outbreaks by week
+#' * `n_hfmd_hosp_adm`: Number of hospital admission episodes of HFMD by week
+#' * `rate_hfmd_aed`: Accident & Emergency Department surveillance of HFMD syndrome group (per 1000 coded cases)
+#' * `prop_hfmd_ccc_kg`: Proportion of child care centres/kindergartens (CCC/KG) with HFMD cases based on HFMD sentinel surveillance at CCC/KG by week
+#' * `rate_hfmd_pvt_med`: Consultation rate for HFMD based on HFMD sentinel surveillance among private medical practitioner clinics by week (per 1000 consultations) 
+#' * `rate_hfmd_gopc`: Consultation rate for HFMD based on HFMD sentinel surveillance among General Out-patient Clinics by week (per 1000 consultations)
+#' 
+#' @details
+#' * Recent data are provisional figures and subject to further revision.
+#' 
+#' @export
+#' 
+ev_surveillance <- function(path = ".", keep = FALSE) {
+  require(dplyr)
+  require(stringr)
+  require(readxl)
+  # Get url
+  url <- "http://www.chp.gov.hk/files/xls/evscan_data.xlsx"
+  # Parse data
+  fpath <- get_file_xlsx(url, path, silent = TRUE)
+  if (!keep) on.exit(unlink(fpath))
+  data <- suppressWarnings(read_excel(
+    fpath, skip = 2,
+    col_names = c(
+      "year",
+      "week",
+      "from",
+      "to",
+      "n_ev71",
+      "n_hfmd_inst",
+      "n_hfmd_hosp_adm",
+      "rate_hfmd_aed",
+      "prop_hfmd_ccc_kg",
+      "rate_hfmd_pvt_med",
+      "rate_hfmd_gopc"
+    ),
+    col_types = c(
+      "guess", "numeric", rep("date", 2), rep("numeric", 4), "text", rep("numeric", 2)
+    )
+  ))
+  # Clean data
+  data <- data %>% filter(grepl("^[0-9]{4}$", year) & !is.na(week)) 
+  return(data)
+}
+
+#' Hospital Authority: Accident and Emergency Waiting Time by Hospital
+#'
+#' Accident and emergency waiting time by hospital. \cr
+#' \cr
+#' UPDATE FREQUENCY: EVERY 15 MINUTES
+#' 
+#' @param timestamp if null then current, otherwise historical waiting time
+#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20190101-2315
+#' minutes %M only available at 0, 15, 30, 45
+#' 
+#' @source <https://data.gov.hk/en-data/dataset/hospital-hadata-ae-waiting-time>
+#'
+#' @export
+#' 
+ae_wait_time <- function(timestamp = NULL, path = ".") {
+  require(dplyr)
+  require(stringr)
+  # Get url
+  url <- "http://www.ha.org.hk/opendata/aed/aedwtdata-en.json"
+  if (!is.null(timestamp)) {
+    if (is.na(strptime(timestamp, "%Y%m%d-%H%M"))) stop("Invalid timestamp format.")
+    if (!grepl("(00|15|30|45)$", timestamp)) stop("Timestamp should ends in 00, 15, 30, or 45.")
+    url <- hist_file_url(url, timestamp)
+  }
+  # Parse data
+  tryCatch(
+    {data <- get_file_json(url, path)},
+    error = function(msg) stop("Unable to retrieve information, input year may not be available.")
+  )
+  # Clean data
+  data <- data$waitTime %>% rename(hosp_name = hospName, top_wait = topWait)
+  return(data)
+}
