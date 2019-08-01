@@ -173,7 +173,7 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
   parse_header <- function(sheet, rows, cat1, cat2, cat3) {
     if (is.character(rows)) return(rows)
     rg <- cell_limits(c(min(rows), 3), c(max(rows), NA))
-    d <- read_excel(fpath, sheet, rg, col_names = FALSE)
+    d <- suppressMessages(read_excel(fpath, sheet, rg, col_names = FALSE))
     d <- data.frame(t(d), stringsAsFactors = FALSE)
     f <- function(x) zoo::na.locf(x, na.rm = FALSE)
     g <- function(x) ifelse(is.na(x), "", x)
@@ -188,9 +188,9 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
   
   parse_sheet <- function(sheet, rows, cat1, cat2, cat3, skip = max(rows)) {
     header <- parse_header(sheet, rows, cat1, cat2, cat3)
-    data <- read_excel(fpath, sheet, skip = skip, col_names = c(
+    data <- suppressMessages(read_excel(fpath, sheet, skip = skip, col_names = c(
       "insurer_eng", "insurer_chi", header$row
-    ))
+    )))
     empty <- apply(data[, -1], 1, function(x) all(is.na(x)))
     data <- data[!empty, ]
     data <- data %>% gather(row, value, -insurer_eng, -insurer_chi)
