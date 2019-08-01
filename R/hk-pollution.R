@@ -2,19 +2,28 @@
 # HONG KONG POLLUTION DATA
 #-----------------------------------------------------------------------------#
 
-#' Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
+# Air Quality Health Index ------------------------------------------------
+
+#' URL for Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 #' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
 #'
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
 #'
 #' @export
 #'
-aqhi_24hr_url <- function(lang = "en") {
-  # TODO: add lang
-  "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_Eng.xml"
+aqhi_24hr_url <- function(lang = c("en", "tc", "sc")) {
+  lang = match.arg(lang)
+  switch(lang,
+         en = "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_Eng.xml",
+         tc = "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_ChT.xml",
+         sc = "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_ChS.xml"
+         )
 }
 
 #' Retrieve Air Quality Health Index (AQHI) at individual general and roadside
-#' Air Quality Monitoring stations for the past 24 hours Reference:
+#' Air Quality Monitoring stations for the past 24 hours
+#' Reference:
 #' https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
 #'
 #' @param data_url the url to the specific file, e.g. as returned by
@@ -51,34 +60,47 @@ aqhi_24hr_retrieve <- function(data_url) {
 #' Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 #' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
 #'
-#' @param timestamp if null then current, otherwise historical weather
-#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#' @param timestamp if null then current, otherwise historical weather it should
+#'   be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-1306
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
 #'
 #' @export
 #'
-aqhi_24hr <- function(timestamp = NULL) {
-  aqhi_24hr_retrieve(data_file_url(aqhi_24hr_url(), timestamp))
+aqhi_24hr <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
+  aqhi_24hr_retrieve(data_file_url(aqhi_24hr_url(lang), timestamp))
+}
+
+
+# Past 24-hour Pollutant Concentration ------------------------------------
+
+#' URL for Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+#'
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English
+#'   
+#' @export
+#'
+pollutant_24hr_url <- function(lang = "en") {
+  # TODO: lang
+  "http://www.aqhi.gov.hk/epd/ddata/html/out/24pc_Eng.xml"
 }
 
 #' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
 #' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
 #'
-#' @param timestamp if null then current, otherwise historical weather
-#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#' @param data_url the url to the specific file, e.g. as returned by
+#'   hist_file_url() for a given timestamp
 #'
 #' @export
 #'
-pollutant_24hr <- function(timestamp = NULL) {
+pollutant_24hr_retrieve <- function(data_url) {
   require(rvest)
   require(httr)
   require(dplyr)
-  url <- "http://www.aqhi.gov.hk/epd/ddata/html/out/24pc_Eng.xml"
-  if (!is.null(timestamp)) {
-    valid <- strptime(timestamp, "%Y%m%d-%H%M")
-    if (is.na(valid)) stop("Invalid timestamp format")
-    url <- hist_file_url(url, timestamp)
-  }
-  res <- content(GET(url), encoding = 'UTF-8')
+
+  res <- content(GET(data_url), encoding = 'UTF-8')
   if (identical("NOT FOUND", res$message)) {
     stop("Unable to retrieve information, input timestamp may not be available
          - try to find the available timestamps.")
@@ -99,25 +121,51 @@ pollutant_24hr <- function(timestamp = NULL) {
   list(header = res_headers, data = res_data)
 }
 
-#' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
 #'
 #' @param timestamp if null then current, otherwise historical weather
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
 #'
 #' @export
 #'
-aqhi_current <- function(timestamp = NULL) {
+pollutant_24hr <- function(timestamp = NULL) {
+  pollutant_24hr_retrieve(data_file_url(pollutant_24hr_url(), timestamp))
+}
+
+# Current Air Quality Health Index ----------------------------------------
+
+#' URL for Current Air Quality Health Index of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#'
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
+#'   
+#' @export
+#'
+aqhi_current_url <- function(lang = c("en", "tc", "sc"))  {
+  lang = match.arg(lang)
+  switch(lang,
+         en = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhi_ind_rss_Eng.xml",
+         tc = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhi_ind_rss_ChT.xml",
+         sc = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhi_ind_rss_ChS.xml"
+  )
+}
+
+#' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#'
+#' @param data_url the url to the specific file, e.g. as returned by
+#'   hist_file_url() for a given timestamp
+#'
+#' @export
+#'
+aqhi_current_retrieve <- function(data_url) {
   require(rvest)
   require(httr)
   require(dplyr)
-  url <- "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhi_ind_rss_Eng.xml"
-  if (!is.null(timestamp)) {
-    valid <- strptime(timestamp, "%Y%m%d-%H%M")
-    if (is.na(valid)) stop("Invalid timestamp format")
-    url <- hist_file_url(url, timestamp)
-  }
-  res <- content(GET(url), encoding = 'UTF-8')
+
+  res <- content(GET(data_url), encoding = 'UTF-8')
   if (identical("NOT FOUND", res$message)) {
     stop("Unable to retrieve information, input timestamp may not be available
          - try to find the available timestamps.")
@@ -157,25 +205,53 @@ aqhi_current <- function(timestamp = NULL) {
   list(header = res_headers, data = res_data)
 }
 
-#' Retrieve Current Air Quality Health Index Range and Forecast
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
 #'
 #' @param timestamp if null then current, otherwise historical weather
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
 #'
 #' @export
 #'
-aqhi_range_forecast <- function(timestamp = NULL) {
+aqhi_current <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
+  aqhi_current_retrieve(data_file_url(aqhi_current_url(lang), timestamp))
+}
+
+# Current Air Quality Health Index Range and Forecast ---------------------
+
+#' URL for Current Air Quality Health Index Range and Forecast
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#'
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
+#'
+#' @export
+#'
+aqhi_range_forecast_url <- function(lang = c("en", "tc", "sc")) {
+  lang = match.arg(lang)
+  switch(lang,
+         en = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhirss_Eng.xml",
+         tc = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhirss_ChT.xml",
+         sc = "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhirss_ChS.xml"
+  )
+}
+
+#' Retrieve Current Air Quality Health Index Range and Forecast
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#'
+#' @param data_url the url to the specific file, e.g. as returned by
+#'   hist_file_url() for a given timestamp
+#'
+#' @export
+#'
+aqhi_range_forecast_retrieve <- function(data_url) {
   require(rvest)
   require(httr)
   require(dplyr)
-  url <- "http://www.aqhi.gov.hk/epd/ddata/html/out/aqhirss_Eng.xml"
-  if (!is.null(timestamp)) {
-    valid <- strptime(timestamp, "%Y%m%d-%H%M")
-    if (is.na(valid)) stop("Invalid timestamp format")
-    url <- hist_file_url(url, timestamp)
-  }
-  res <- content(GET(url), encoding = 'UTF-8')
+
+  res <- content(GET(data_url), encoding = 'UTF-8')
   if (identical("NOT FOUND", res$message)) {
     stop("Unable to retrieve information, input timestamp may not be available
          - try to find the available timestamps.")
@@ -200,11 +276,11 @@ aqhi_range_forecast <- function(timestamp = NULL) {
 
   # the first is for now
   res_current <- res_items[[1]]
-  type_date <- trimws(strsplit(res_current$title, split = ": ")[[1]], "both")
+  type_date <- trimws(strsplit(res_current$title, split = ": |：")[[1]], "both")
   res_current$data_desc <- type_date[1]
   res_current$dateTime <- strsplit(type_date[2], split = "[\t\n]")[[1]][1]
   aqhi_dat <- res_current$description %>% read_html() %>% html_nodes("p") %>% html_text() %>%
-    strsplit(split = "[:()]") %>%
+    strsplit(split = "[:()]|：") %>%
     lapply(FUN=function(x) {
       dat <- trimws(x, which = "both")
       data.frame(
@@ -224,7 +300,7 @@ aqhi_range_forecast <- function(timestamp = NULL) {
 
   # the second is the forecast
   res_forecast <- res_items[[2]]
-  type_date <- trimws(strsplit(res_forecast$title, split = ": ")[[1]], "both")
+  type_date <- trimws(strsplit(res_forecast$title, split = ": |：")[[1]], "both")
   res_forecast$data_desc <- type_date[1]
   aqhi_dat <- res_forecast$description %>% read_html() %>% html_nodes("p") %>% html_text()
   res_forecast_data <- do.call(
@@ -234,7 +310,7 @@ aqhi_range_forecast <- function(timestamp = NULL) {
                 list(data_type = aqhi_dat[4], type_risk = aqhi_dat[5]),
                 list(data_type = aqhi_dat[4], type_risk = aqhi_dat[6])),
            function(x) {
-             tmp <- strsplit(x$type_risk, split = ":")[[1]] %>% trimws(which = "both")
+             tmp <- strsplit(x$type_risk, split = ":|：")[[1]] %>% trimws(which = "both")
              data.frame(data_type = x$data_type,
                         station_type = tmp[1],
                         risk = tmp[2])
@@ -252,6 +328,22 @@ aqhi_range_forecast <- function(timestamp = NULL) {
   #
   list(header = res_headers, data = rbind(res_current_data, res_forecast_data))
 }
+
+#' Retrieve Current Air Quality Health Index Range and Forecast
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#'
+#' @param timestamp if null then current, otherwise historical weather
+#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#' @param lang select the language of the available data, available choices are
+#'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
+#'
+#' @export
+#'
+aqhi_range_forecast <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
+  aqhi_range_forecast_retrieve(data_file_url(aqhi_range_forecast_url(lang), timestamp))
+}
+
+# Past hourly record of Air Pollution Index -------------------------------
 
 #' URL for Past hourly record of Air Pollution Index at a given year and month
 #' 
@@ -306,6 +398,9 @@ past_pollution_index <- function(year, month, path = NULL) {
   # still some clean up needed, only hour 0 has Date, the Date for other hours are omitted
   data %>% fill(Date)
 }
+
+
+# Past record of Air Quality Health Index ---------------------------------
 
 #' URL for Past record of Air Quality Health Index
 #' 
@@ -362,6 +457,9 @@ past_aqhi <- function(year, month, path = NULL) {
   data %>% fill(Date)
 }
 
+
+# Towngas Environmental Performance Data ----------------------------------
+
 #' URL for Towngas Environmental Performance Data
 #' 
 #' Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
@@ -400,6 +498,19 @@ towngas_performance_data <- function(fromYear, toYear = fromYear, path = NULL) {
   unnest(unnest(data))
 }
 
+
+# Real-time city data collected by multi-purpose lamp posts ---------------
+
+#' URL for Real-time city data collected by multi-purpose lamp posts in Kowloon East
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
+#' Note that only the most update value is available.
+#' @export
+#'
+lamp_posts_data_url <- function() {
+  "https://mplpssl.wisx.io/nodered/getlampposts/"
+}
+
 #' Retrieve Real-time city data collected by multi-purpose lamp posts in Kowloon East
 #' 
 #' Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
@@ -417,32 +528,4 @@ lamp_posts_data <- function(path = NULL) {
   # the returned data has one level of nesting after the default simplification
   # of arrays of dataframe
   unnest(data)
-}
-
-#' Retrieve Hong Kong Public Holidays Data
-#' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal
-#' 1823 currently provides data of Hong Kong Public Holidays for 2018-2020.
-#'
-#'#' @param path the directory where the raw file should be save, if NULL it
-#' will not be saved
-#' 
-#' @export
-#'
-hk_holidays <- function(path = NULL) {
-  require(tidyr)
-  url <- "http://www.1823.gov.hk/common/ical/en.json"
-  data <- get_file_json(url, path)
-  
-  events <- do.call(
-    "rbind",
-    lapply(data$vcalendar$vevent,
-           function(v) {
-             v %>% mutate(dtstart = sapply(dtstart, function(x) x[[1]]),
-                          dtend = sapply(dtend, function(x) x[[1]]))
-           })
-    )
-
-  list(header = data$vcalendar[c("prodid", "version", "calscale", "x-wr-timezone", "x-wr-calname", "x-wr-caldesc")],
-       data = events)
 }
