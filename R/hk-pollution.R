@@ -434,10 +434,15 @@ hk_holidays <- function(path = NULL) {
   url <- "http://www.1823.gov.hk/common/ical/en.json"
   data <- get_file_json(url, path)
   
-  vevents <- data$vcalendar$vevent[[1]]
-  tmp1 <- vevents %>% mutate(dtstart = sapply(dtstart, function(x) x[[1]]),
-                             dtend = sapply(dtend, function(x) x[[1]]))
-  # the returned data has one level of nesting after the default simplification
-  # of arrays of dataframe
-  unnest(data)
+  events <- do.call(
+    "rbind",
+    lapply(data$vcalendar$vevent,
+           function(v) {
+             v %>% mutate(dtstart = sapply(dtstart, function(x) x[[1]]),
+                          dtend = sapply(dtend, function(x) x[[1]]))
+           })
+    )
+
+  list(header = data$vcalendar[c("prodid", "version", "calscale", "x-wr-timezone", "x-wr-calname", "x-wr-caldesc")],
+       data = events)
 }
