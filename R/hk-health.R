@@ -301,6 +301,7 @@ ev_surveillance <- function(path = ".", keep = FALSE) {
 #' @param timestamp if null then current, otherwise historical waiting time
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20190101-2315
 #' minutes %M only available at 0, 15, 30, 45
+#' @param path path to save the file
 #' 
 #' @source <https://data.gov.hk/en-data/dataset/hospital-hadata-ae-waiting-time>
 #'
