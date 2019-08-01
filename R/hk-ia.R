@@ -221,8 +221,9 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
     y <- gsub("\\n", "", y)
     y <- gsub("/", "", y)
     y <- gsub("[[:space:]]+", " ", y)
-    y <- gsub("^[[:space:]]+|[[:space:]]+$", "", cat2)
+    y <- gsub("^[[:space:]]+|[[:space:]]+$", "", y)
     y <- gsub("(Number of Policies).+", "\\1", y, ignore.case = TRUE)
+    y
   }
   process_category <- function(x) {
     y <- strsplit(x, "\\n")
