@@ -3,6 +3,7 @@ library(httr)
 library(tidyverse)
 library(hkdata)
 library(DT)
+library(leaflet)
 
 actionButton1 <- function(inputId, label, icon = NULL, width = NULL, 
                           status = "default", ...) {
