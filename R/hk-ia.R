@@ -152,21 +152,35 @@ hkia_longterm_insurer <- function(year, table, path = ".", keep = FALSE) {
 hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) {
   require(readxl)
   require(dplyr)
+  require(tidyr)
   year <- year %% 100
   url <- sprintf(paste0("https://www.ia.org.hk/en/infocenter/statistics/",
                 "files/%sq%slong.xls"), quarter, year)
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
   
-  parse_header <- function(rows, sheet) {
+  parse_header <- function(sheet, rows, cat1, cat2, cat3) {
     if (is.character(rows)) return(rows)
     rg <- cell_limits(c(min(rows), 3), c(max(rows), NA))
     d <- read_excel(fpath, sheet, rg, col_names = FALSE)
     d <- data.frame(t(d), stringsAsFactors = FALSE)
     f <- function(x) zoo::na.locf(x, na.rm = FALSE)
-    d <- d %>% mutate_all(f)
-    apply(d, 1, paste0, collapse = "")
+    g <- function(x) ifelse(is.na(x), "", x)
+    d <- d %>% mutate_all(f) %>% mutate_all(g)
+    dcat1 <- apply(d[, cat1, drop = FALSE], 1, paste0, collapse = "")
+    dcat2 <- apply(d[, cat2, drop = FALSE], 1, paste0, collapse = "")
+    dcat3 <- apply(d[, cat3, drop = FALSE], 1, paste0, collapse = "")
+    data.frame(cat1 = dcat1, cat2 = dcat2, cat3 = dcat3,
+               row = paste0("r", 1:nrow(d)), stringsAsFactors = F)
   }
+  
+  header <- parse_header()
+  data <- read_excel(fpath, sheet, skip = 13, col_names = c(
+    "insurer_eng", "insurer_chi", header$row
+  ))
+  
+  data <- data %>% gather(row, value, -insurer_eng, -insurer_chi)
+  data %>% left_join(header)
   
   # Read and parse sheets-------------------------------------------#
   data <- read_excel(fpath, "Table L1", skip = 6)
