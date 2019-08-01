@@ -4,32 +4,46 @@
 
 #' HK 2006 Population Census: by Small Tertiary Planning Unit Group (STPUG)
 #'
+#' @param table_no the number of the table
+#' @param keyword the keyword/category of the table
+#'
 #' @details
-#' totally got 11 cencus statistics tables at STPUG level: 
-#' No Table_No Table_Description
-#' 1	A501	Hong Kong Resident Population by Ethnicity and Small Tertiary Planning Unit Group, 2006 (A501) [English]
-#' 2	A502	Hong Kong Resident Population Aged 5 and Over by Usual Language and Small Tertiary Planning Unit Group, 2006 (A502) [English]
-#' 3	A503	Hong Kong Resident Population by Broad Age Group, Sex and Small Tertiary Planning Unit Group, 2006 (A503) [English]
-#' 4	C501	Hong Kong Resident Population by Economic Activity Status and Small Tertiary Planning Unit Group, 2006 (C501) [English]
-#' 5	C502	Working Population by Industry [Sector] and Small Tertiary Planning Unit Group, 2006 (C502) [English]
-#' 6	C503	Working Population by Occupation [Major Group] and Small Tertiary Planning Unit Group, 2006 (C503) [English]
-#' 7	C504	Working Population by Monthly Income from Main Employment and Small Tertiary Planning Unit Group, 2006 (C504) [English]
-#' 8	D401	Domestic Households by Household Size and Small Tertiary Planning Unit Group, 2006 (D401) [English]
-#' 9	D402	Domestic Households by Household Composition and Small Tertiary Planning Unit Group, 2006 (D402) [English]
-#' 10	D403	Domestic Households by Monthly Domestic Household Income and Small Tertiary Planning Unit Group, 2006 (D403) [English]
-#' 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English]
+#' totally got 11 cencus statistics tables at STPUG level: \cr
+#' 1) you can search by 'Table_ID' 
+#' No Table_ID Table_Keywords Table_Description \cr
+#' 1	A501  Hong Kong Resident Population by Ethnicity and Small Tertiary Planning Unit Group, 2006 (A501) [English] \cr
+#' 2	A502	Hong Kong Resident Population Aged 5 and Over by Usual Language and Small Tertiary Planning Unit Group, 2006 (A502) [English] \cr
+#' 3	A503	Hong Kong Resident Population by Broad Age Group, Sex and Small Tertiary Planning Unit Group, 2006 (A503) [English] \cr
+#' 4	C501	Hong Kong Resident Population by Economic Activity Status and Small Tertiary Planning Unit Group, 2006 (C501) [English] \cr
+#' 5	C502	Working Population by Industry (Sector) and Small Tertiary Planning Unit Group, 2006 (C502) [English] \cr
+#' 6	C503	Working Population by Occupation (Major Group) and Small Tertiary Planning Unit Group, 2006 (C503) [English] \cr
+#' 7	C504	Working Population by Monthly Income from Main Employment and Small Tertiary Planning Unit Group, 2006 (C504) [English] \cr
+#' 8	D401	Domestic Households by Household Size and Small Tertiary Planning Unit Group, 2006 (D401) [English] \cr
+#' 9	D402	Domestic Households by Household Composition and Small Tertiary Planning Unit Group, 2006 (D402) [English] \cr
+#' 10	D403	Domestic Households by Monthly Domestic Household Income and Small Tertiary Planning Unit Group, 2006 (D403) [English] \cr
+#' 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English] \cr
+#' \cr
+#' 2) or search by keywords: \cr
+#' ethnicity, language, age, sex, economic_activity_status \cr
+#' industry, occupation, monthly_income \cr
+#' household_income, household_size, household_composition, quarter_type
+
+#' @examples  
+#' hk_census_stpug(table_id = "A501")
+#' hk_census_stpug(keyword = "household_income")
 
 #' @export 
 #' 
 
-
-hk_census_stpug <- function(table_no){
+hk_census_stpug <- function(table_id = NULL, keyword = NULL){
   require(rvest)
   require(dplyr)
   require(tidyverse)
   
   # find URL for all census data download
-  url <- "https://data.gov.hk/en-data/dataset/hk-censtatd-06c_csv_en-2006-population-bycensus-statistical-tables-csv-en"
+  url <- paste("https://data.gov.hk/en-data/dataset/",
+                "hk-censtatd-06c_csv_en-2006-population",
+                "-bycensus-statistical-tables-csv-en", sep = "")
   page <- read_html(url)
 
   all_links <- page %>%
@@ -44,19 +58,21 @@ hk_census_stpug <- function(table_no){
     html_attr("data-resource-title-en")
   all_tbls_name <- all_tbls_name[!is.na(all_tbls_name)]
 
-  master <- tibble(tbl_name = all_tbls_name,
-                   url = all_links )
+  master <- tibble(tbl_name = all_tbls_name, url = all_links )
 
   # URL for TPU level data
   by_tpu <- master %>%
-    filter(str_detect(tolower(tbl_name),"small tertiary planning unit group")) %>%
-    mutate(tbl_no = substr(tbl_name, nchar(tbl_name) - 14, nchar(tbl_name) - 11)) %>%
-    select(tbl_no, tbl_name, url)
+    filter(str_detect(tolower(tbl_name),
+                      "small tertiary planning unit group")) %>%
+    mutate(tbl_id = substr(tbl_name, nchar(tbl_name) - 14, 
+                           nchar(tbl_name) - 11)) %>%
+    select(tbl_id, tbl_name, url)
 
   # Download the file to temp folder
   path <- tempdir()
   fpath <- file.path(path, basename(by_tpu$url))
-  by_tpu_dt <- lapply(fpath, read_csv, col_name = FALSE)
+  by_tpu_dt <- lapply(fpath, read_csv, col_name = FALSE, 
+                      col_types = cols(.default = "c"))
   
   # formatting and clean the data
   # 1 - A501
@@ -94,14 +110,12 @@ hk_census_stpug <- function(table_no){
     mutate(working_population_number = 
              suppressWarnings(as.numeric(working_population_number)))
   
-  
   # 6	- C503
   dt_6 <- by_tpu_dt[[6]][5:209,1:11] %>%
     `colnames<-`(c("stpug", as.character(by_tpu_dt[[6]][3,2:11]))) %>%
     gather("occupation", "working_population_number", - stpug) %>%
     mutate(working_population_number = 
              suppressWarnings(as.numeric(working_population_number)))
-  
   
   # 7	- C504
   dt_7 <- by_tpu_dt[[7]][5:209,1:12] %>%
@@ -117,7 +131,6 @@ hk_census_stpug <- function(table_no){
     gather("household_size", "domestic_households_number", - stpug) %>%
     mutate(domestic_households_number = 
              suppressWarnings(as.numeric(domestic_households_number)))
-  
   
   # 9	- D402
   dt_9 <- by_tpu_dt[[9]][5:209,1:8] %>%
@@ -152,14 +165,31 @@ search_list <- cbind(tbl = names(keywords_list), keywords, by_tpu) %>%
   select(- starts_with("V")) %>%
   mutate(tbl = as.character(tbl))
 
-search_tbl_name <- search_list[search_list$tbl_no == table_no,1]
-search_tbl <- get(search_tbl_name)
+if (!is.null(table_id)){
+  table_ids <- c("A501", "A502", "A503", "C501", "C502", "C503", "C504",
+                 "D401", "D402", "D403", "E501")
+  if (!table_id %in% table_ids) stop("please enter a correct table id")
+  
+  search_tbl_name <- search_list[search_list$tbl_id == table_id,1]
+  search_tbl <- get(search_tbl_name)
+}
+
+if (!is.null(keyword)){
+  table_cates <- c(
+    "ethnicity", "language", "age_group", "sex", "economic_activity_status", 
+    "industry", "occupation", "monthly_income",
+    "household_income", "household_size", "household_composition", "quarter_type")
+  if (!keyword %in% table_cates) stop("cannot find any related tables")
+  
+  search_tbl_name <- search_list[str_detect(search_list$keywords,"age_group"),1]
+  search_tbl <- get(search_tbl_name)
+}
+
 
 return(search_tbl)
 }
 
-#' @example 
-hk_census_stpug("A501")
+
 
 
 
