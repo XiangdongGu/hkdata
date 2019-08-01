@@ -181,10 +181,9 @@ if (!is.null(keyword)){
     "household_income", "household_size", "household_composition", "quarter_type")
   if (!keyword %in% table_cates) stop("cannot find any related tables")
   
-  search_tbl_name <- search_list[str_detect(search_list$keywords,"age_group"),1]
+  search_tbl_name <- search_list[str_detect(search_list$keywords,keyword),1]
   search_tbl <- get(search_tbl_name)
 }
-
 
 return(search_tbl)
 }
