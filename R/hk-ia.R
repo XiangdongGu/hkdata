@@ -222,6 +222,10 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
     y <- gsub("/", "", y)
     y <- gsub("[[:space:]]+", " ", y)
     y <- gsub("^[[:space:]]+|[[:space:]]+$", "", y)
+    y
+  }
+  process_vtype2 <- function(x) {
+    y <- process_vtype(x)
     y <- gsub("(Number of Policies).+", "\\1", y, ignore.case = TRUE)
     y
   }
@@ -241,7 +245,7 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
   
   L3 <- L3 %>% 
     mutate(cat2 = gsub(".+\\n(.+)", "\\1", cat2),
-           cat3 = process_vtype(cat3),
+           cat3 = process_vtype2(cat3),
            value = ifelse(value == "-", 0, value),
            value = as.numeric(value)) %>%
     select(insurer_eng, insurer_chi, business_class = cat2,
