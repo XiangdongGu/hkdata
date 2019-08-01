@@ -245,5 +245,9 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
            value = as.numeric(value)) %>%
     select(insurer_eng, insurer_chi, business_class = cat2,
            value_type = cat3, value)
+  list(
+    L1 = L1,
+    L3 = L3
+  )
 }
 
