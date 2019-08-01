@@ -1,9 +1,3 @@
-
-
-source("get-file.R")
-source("list-file.R")
-
-
 # (1) Details of HK Electric EV charging stations
 # https://data.gov.hk/en-data/dataset/hkelectric-tnd_cs_ci-hkelectric-ev-location/resource/d4aa7487-1eb7-4b95-b552-d0c7b0029415
 #
