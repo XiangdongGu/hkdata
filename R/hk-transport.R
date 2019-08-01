@@ -1,9 +1,24 @@
+
+#-----------------------------------------------------------------------------#
+# HONG KONG TRANSPORT DATA
+#-----------------------------------------------------------------------------#
+
+
+
 # (1) Details of HK Electric EV charging stations
 # https://data.gov.hk/en-data/dataset/hkelectric-tnd_cs_ci-hkelectric-ev-location/resource/d4aa7487-1eb7-4b95-b552-d0c7b0029415
 #
-# Given the lat_in and long_in of the place, the function can return the information of the charging stations around the place and
-# arranged by the distances
+# Given the lat_in and long_in of current place, the function can return the information of the charging stations around the place and
+# arranged by the distances in ascending order.
 
+
+#' Retrieve details of nearby Electric EV charging stations
+#'
+#' @param lat_in Input the latitude of the current place
+#' @param long_in Input the longitude of the current place
+#'
+#' @export
+#'
 transport_EV_charging <- function(lat_in,long_in) {
   require(dplyr)
   
@@ -43,19 +58,48 @@ transport_EV_charging <- function(lat_in,long_in) {
 # UPDATE FREQUENCY: EVERY 5 MINUTES
 
 
-#Need consider how to show the possible timestamp
+#' Generate the basic url for Arrival Information for Cross Boundary Ferry Service
+#'
+#' @param Lang Options of Language: "sc": simplified Chinese; "tc": traditional Chinese; "en": English (default)
+#'
+#' @export
+#'
+transport_Arrival_CrossBoundaryFerry_url <- function(Lang ="en"){
+  if (Lang == "sc"){
+    return("https://www.mardep.gov.hk/e_files/sc/opendata/arrival_sc.csv")
+  } else if (Lang == "tc"){
+    return("https://www.mardep.gov.hk/e_files/hk/opendata/arrival_tc.csv")
+  } else {
+    return("https://www.mardep.gov.hk/e_files/en/opendata/arrival_en.csv")
+  }
+}
 
-#hist_file_versions(url = "https://www.mardep.gov.hk/e_files/en/opendata/arrival_en.csv",start = "2019-07-29")
+
+#' Retrieve the Arrival Information for Cross Boundary Ferry Service given specific data url
+#'
+#' @param data_url Specific data url
+#'
+#' @export
+#'
+transport_Arrival_CrossBoundaryFerry_retrieve <- function(data_url){
+  temp_file <-read.csv(data_url, sep = "|")
+  return(temp_file)
+}
 
 
-
-
-transport_Arrival_CrossBoundaryFerry <- function(timestamp){
-  #timestamp format: "20190729-0915"
-  url <- "https://www.mardep.gov.hk/e_files/en/opendata/arrival_en.csv"
-  url <- hist_file_url(url,timestamp)
-  temp_file <-read.csv(url, sep = "|")
-  
+#' Retrieve the Arrival Information for Cross Boundary Ferry Service given specific timestamp and language version
+#'
+#' @param timestamp Timestamp of the historical file to retrieve. If null then
+#'   current, otherwise historical. It should be in format of \%Y\%m\%d-\%H\%M,
+#'   e.g. 20180905-1306.
+#' @param Lang Options of Language: "sc": simplified Chinese; "tc": traditional Chinese; "en": English (default)     
+#'
+#' @export
+#'
+transport_Arrival_CrossBoundaryFerry <- function(timestamp = NULL, Lang = "en"){
+  data_url <- data_file_url(transport_Arrival_CrossBoundaryFerry_url(Lang), timestamp)
+  temp_file <- transport_Arrival_CrossBoundaryFerry_retrieve(data_url)
+  return(temp_file)
 }
 
 
@@ -63,7 +107,7 @@ transport_Arrival_CrossBoundaryFerry <- function(timestamp){
 # #Example
 # test1 <- transport_Arrival_CrossBoundaryFerry("20190729-1004")
 
-
+ 
 
 
 
@@ -175,13 +219,13 @@ transport_Flight <- function(Date, Arrival, Cargo, Lang = "en") {
 
 # #Example
 # 
-# test1<-transport_Flight("2019-05-01",FALSE,FALSE)
+# test1<-transport_Flight("2019-07-01",FALSE,FALSE)
 # 
-# test2<-transport_Flight("2019-05-01",TRUE,FALSE)
+# test2<-transport_Flight("2019-07-01",TRUE,FALSE)
 # 
-# test3<-transport_Flight("2019-05-01",FALSE,TRUE)
+# test3<-transport_Flight("2019-07-01",FALSE,TRUE)
 # 
-# test4<-transport_Flight("2019-05-01",TRUE,TRUE)
+# test4<-transport_Flight("2019-07-01",TRUE,TRUE)
 
 
 
