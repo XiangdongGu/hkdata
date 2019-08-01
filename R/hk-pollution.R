@@ -5,22 +5,29 @@
 #' Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 #' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
 #'
-#' @param timestamp if null then current, otherwise historical weather
-#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
 #'
 #' @export
 #'
-aqhi_24hr <- function(timestamp = NULL) {
+aqhi_24hr_url <- function(lang = "en") {
+  # TODO: add lang
+  "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_Eng.xml"
+}
+
+#' Retrieve Air Quality Health Index (AQHI) at individual general and roadside
+#' Air Quality Monitoring stations for the past 24 hours Reference:
+#' https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+#'
+#' @param data_url the url to the specific file, e.g. as returned by
+#'   hist_file_url() for a given timestamp
+#'
+#' @export
+#' 
+aqhi_24hr_retrieve <- function(data_url) {
   require(rvest)
   require(httr)
   require(dplyr)
-  url <- "http://www.aqhi.gov.hk/epd/ddata/html/out/24aqhi_Eng.xml"
-  if (!is.null(timestamp)) {
-    valid <- strptime(timestamp, "%Y%m%d-%H%M")
-    if (is.na(valid)) stop("Invalid timestamp format")
-    url <- hist_file_url(url, timestamp)
-  }
-  res <- content(GET(url), encoding = 'UTF-8')
+  
+  res <- content(GET(data_url), encoding = 'UTF-8')
   if (identical("NOT FOUND", res$message)) {
     stop("Unable to retrieve information, input timestamp may not be available
          - try to find the available timestamps.")
@@ -37,8 +44,20 @@ aqhi_24hr <- function(timestamp = NULL) {
                           data.frame(stringsAsFactors = FALSE)
                       })
   res_data <- do.call("rbind", res_items)
-
+  
   list(header = res_headers, data = res_data)
+}
+
+#' Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
+#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+#'
+#' @param timestamp if null then current, otherwise historical weather
+#' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
+#'
+#' @export
+#'
+aqhi_24hr <- function(timestamp = NULL) {
+  aqhi_24hr_retrieve(data_file_url(aqhi_24hr_url(), timestamp))
 }
 
 #' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
@@ -395,6 +414,29 @@ lamp_posts_data <- function(path = NULL) {
   require(tidyr)
   url <- "https://mplpssl.wisx.io/nodered/getlampposts/"
   data <- get_file_json(url, path)
+  # the returned data has one level of nesting after the default simplification
+  # of arrays of dataframe
+  unnest(data)
+}
+
+#' Retrieve Hong Kong Public Holidays Data
+#' 
+#' Reference: https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal
+#' 1823 currently provides data of Hong Kong Public Holidays for 2018-2020.
+#'
+#'#' @param path the directory where the raw file should be save, if NULL it
+#' will not be saved
+#' 
+#' @export
+#'
+hk_holidays <- function(path = NULL) {
+  require(tidyr)
+  url <- "http://www.1823.gov.hk/common/ical/en.json"
+  data <- get_file_json(url, path)
+  
+  vevents <- data$vcalendar$vevent[[1]]
+  tmp1 <- vevents %>% mutate(dtstart = sapply(dtstart, function(x) x[[1]]),
+                             dtend = sapply(dtend, function(x) x[[1]]))
   # the returned data has one level of nesting after the default simplification
   # of arrays of dataframe
   unnest(data)
