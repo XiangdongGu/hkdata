@@ -185,7 +185,13 @@ if (!is.null(keyword)){
   search_tbl <- get(search_tbl_name)
 }
 
-return(search_tbl)
+# density plot
+x <- search_tbl %>%
+  ggplot(aes(get(colnames(search_tbl[3])))) +
+  facet_wrap(~ get(colnames(search_tbl[2])), scales = "free") +
+  geom_density()
+
+return(list(search_tbl,x))
 }
 
 
