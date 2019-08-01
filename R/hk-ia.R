@@ -33,7 +33,7 @@ hkia_longterm_market <- function(year, table, path = ".", keep = FALSE) {
   )
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
-
+  
   # Read/Parse the data----------------------------------------------#
   allna <- function(x) all(is.na(x))
   to_header <- function(x) ifelse(is.na(x), "", x)
@@ -82,7 +82,7 @@ hkia_longterm_market <- function(year, table, path = ".", keep = FALSE) {
           temp = year,
           year = gsub("(.+)\\^(.*)", "\\1", temp),
           unit = gsub("(.+)\\^(.*)", "\\2", temp)) %>%
-            select(-temp)
+        select(-temp)
     }
     d <- cbind(d %>% select(-key), expand_key)
     d <- d %>% filter(!is.na(business_type)) # Special handling for L1
@@ -129,7 +129,7 @@ hkia_longterm_insurer <- function(year, table, path = ".", keep = FALSE) {
     table, year)
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
-
+  
   # Read the data----------------------------------------------#
   data <- read_excel(fpath, skip = 7)
   unit_row <- as.character(data[1, ])
@@ -149,13 +149,24 @@ hkia_longterm_insurer <- function(year, table, path = ".", keep = FALSE) {
 #' Quarterly Release of Provisional Statistics for Long Term Business.
 #' Results are cumulative
 #' 
+#' @param year the year
+#' @param quarter the quarter
+#' @param path path to save the file
+#' @param keep whether to keep the file after read
+#' 
+#' @details 
+#' Currently we only parse sheets for L1s (new direct individual business) and 
+#' L3s (inforce direct individual business)
+#' 
+#' @export
+#' 
 hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) {
   require(readxl)
   require(dplyr)
   require(tidyr)
   year <- year %% 100
   url <- sprintf(paste0("https://www.ia.org.hk/en/infocenter/statistics/",
-                "files/%sq%slong.xls"), quarter, year)
+                        "files/%sq%slong.xls"), quarter, year)
   fpath <- get_file_xlsx(url, path, silent = TRUE)
   if (!keep) on.exit(unlink(fpath))
   
@@ -167,24 +178,72 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
     f <- function(x) zoo::na.locf(x, na.rm = FALSE)
     g <- function(x) ifelse(is.na(x), "", x)
     d <- d %>% mutate_all(f) %>% mutate_all(g)
-    dcat1 <- apply(d[, cat1, drop = FALSE], 1, paste0, collapse = "")
-    dcat2 <- apply(d[, cat2, drop = FALSE], 1, paste0, collapse = "")
-    dcat3 <- apply(d[, cat3, drop = FALSE], 1, paste0, collapse = "")
-    data.frame(cat1 = dcat1, cat2 = dcat2, cat3 = dcat3,
+    dcats <- lapply(list(cat1, cat2, cat3), function(x) {
+      if (is.character(x)) return(rep(x, nrow(d)))
+      apply(d[, x, drop = FALSE], 1, paste0, collapse = " ")
+    })
+    data.frame(cat1 = dcats[[1]], cat2 = dcats[[2]], cat3 = dcats[[3]],
                row = paste0("r", 1:nrow(d)), stringsAsFactors = F)
   }
   
-  header <- parse_header()
-  data <- read_excel(fpath, sheet, skip = 13, col_names = c(
-    "insurer_eng", "insurer_chi", header$row
-  ))
-  
-  data <- data %>% gather(row, value, -insurer_eng, -insurer_chi)
-  data %>% left_join(header)
+  parse_sheet <- function(sheet, rows, cat1, cat2, cat3, skip = max(rows)) {
+    header <- parse_header(sheet, rows, cat1, cat2, cat3)
+    data <- read_excel(fpath, sheet, skip = skip, col_names = c(
+      "insurer_eng", "insurer_chi", header$row
+    ))
+    empty <- apply(data[, -1], 1, function(x) all(is.na(x)))
+    data <- data[!empty, ]
+    data <- data %>% gather(row, value, -insurer_eng, -insurer_chi)
+    data <- data %>% left_join(header, by = "row")
+    data %>% select(insurer_eng, insurer_chi, cat1, cat2, cat3, value)
+  }
   
   # Read and parse sheets-------------------------------------------#
-  data <- read_excel(fpath, "Table L1", skip = 6)
+  # L1 - new direct individual business
+  l1 <- parse_sheet("Table L1", 7:13, "Business Class", 1:3, 4:7)
+  l1a <- parse_sheet("Table L1(a)", 7:13, 1, 2:3, 4:7)
+  l1b <- parse_sheet("Table L1(b)", 7:13, 1, 2:3, 4:7)
+  l1c <- parse_sheet("Table L1(c)", 7:12, 1, 2:6, "Premium")
+  l1d <- parse_sheet("Table L1(d)", 7:13, 1, 2:3, 4:7)
+  l1e <- parse_sheet("Table L1(e)", 7:13, 1, 2:3, 4:7)
+  l1f <- parse_sheet("Table L1(f)", 7:13, 1, 2:3, 4:7)
+  l1g <- parse_sheet("Table L1(g)", 7:13, 1, 4:7, 2:3)
+  l1h <- parse_sheet("Table L1(h)", 7:13, 1, 2:3, 4:7)
+  L1 <- bind_rows(l1, l1a, l1b, l1c, l1d, l1e, l1f, l1g, l1h)
+  # L3 - direct inforce business
+  l31 <- parse_sheet("Table L3-1", 8:11, "Business Class", 1, 2:4)
+  l32 <- parse_sheet("Table L3-2", 8:11, "Business Class", 1, 2:4)
+  L3 <- bind_rows(l31, l32)
+  # Process the tables-------------------------------------------------#
+  process_vtype <- function(x) {
+    y <- gsub("[^[:alnum:][:punct:][:space:]]", "", x)
+    y <- gsub("\\(\\)", "", y)
+    y <- gsub("\\n", "", y)
+    y <- gsub("/", "", y)
+    y <- gsub("[[:space:]]+", " ", y)
+    y <- gsub("^[[:space:]]+|[[:space:]]+$", "", cat2)
+    y <- gsub("(Number of Policies).+", "\\1", y, ignore.case = TRUE)
+  }
+  process_category <- function(x) {
+    y <- strsplit(x, "\\n")
+  }
+  L1 <- L1 %>%
+    mutate(
+      cat1 = process_vtype(cat1),
+      cat2 = gsub("^[[:space:]]+|[[:space:]]+$", "", cat2),
+      cat3 = process_vtype(cat3),
+      value = ifelse(value == "-", 0, value),
+      value = as.numeric(value)
+    ) %>%
+    select(insurer_eng, insurer_chi, by_group = cat1, catetory = cat2,
+           value_type = cat3, value)
   
-  
+  L3 <- L3 %>% 
+    mutate(cat2 = gsub(".+\\n(.+)", "\\1", cat2),
+           cat3 = process_vtype(cat3),
+           value = ifelse(value == "-", 0, value),
+           value = as.numeric(value)) %>%
+    select(insurer_eng, insurer_chi, business_class = cat2,
+           value_type = cat3, value)
 }
 
