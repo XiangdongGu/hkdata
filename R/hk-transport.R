@@ -129,7 +129,7 @@ transport_Arrival_CrossBoundaryFerry <- function(timestamp = NULL, Lang = "en"){
 
 
 
-#' Generate the Flight Information given the date, arrival or departure, cargo or pessenger for different language versions
+#' Generate the Flight Information given the date, arrival or departure, cargo or passenger for different language versions
 #'
 #' @param Date String, "YYYY-MM-DD" (The data is up-to-date to the previous calendar day.)
 #'
@@ -228,7 +228,7 @@ transport_Flight_retrieve <- function(Date, Arrival, Cargo, Lang = "en") {
 }
 
 
-#' Generate the list of Flight Information given the time range, arrival or departure, cargo or pessenger for different language versions
+#' Generate the list of Flight Information given the time range, arrival or departure, cargo or passenger for different language versions
 #'
 #' @param start String, "YYYY-MM-DD"  starting date of interest
 #' 
