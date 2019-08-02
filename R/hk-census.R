@@ -71,9 +71,9 @@ hk_census_stpug <- function(table_id = NULL, keyword = NULL){
     select(tbl_id, tbl_name, url)
 
   # Download the file to temp folder
-  path <- tempdir()
-  fpath <- file.path(path, basename(by_tpu$url))
-  by_tpu_dt <- lapply(fpath, read_csv, col_name = FALSE, 
+  # path <- tempdir()
+  # fpath <- file.path(path, basename(by_tpu$url))
+  by_tpu_dt <- lapply(by_tpu$url, read_csv, col_name = FALSE, 
                       col_types = cols(.default = "c"))
   
   # formatting and clean the data

@@ -53,7 +53,7 @@ ggplot(idata, aes(year, pct, group = insurer_eng, color = insurer_eng)) +
   theme_wsj() + 
   scale_y_continuous(labels = scales::percent) + 
   # annotate("text", x = 2018, y = anno, label = anno_t) +
-  ggtitle("Top 5 Insuers' Offshore Business") +
+  ggtitle("Top 5 Insurers' Offshore Business") +
   theme(legend.position = "none",
         title = element_text(size = 12))
   
