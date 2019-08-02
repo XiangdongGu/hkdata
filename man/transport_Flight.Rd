@@ -2,7 +2,7 @@
 % Please edit documentation in R/hk-transport.R
 \name{transport_Flight}
 \alias{transport_Flight}
-\title{Generate the list of Flight Information given the time range, arrival or departure, cargo or pessenger for different language versions}
+\title{Generate the list of Flight Information given the time range, arrival or departure, cargo or passenger for different language versions}
 \usage{
 transport_Flight(start, end, Arrival, Cargo, Lang = "en")
 }
@@ -18,5 +18,5 @@ transport_Flight(start, end, Arrival, Cargo, Lang = "en")
 \item{Lang}{Options of Language: "zh_HK": traditional Chinese; "zh_CN": simplified Chinese; "en": English (default)}
 }
 \description{
-Generate the list of Flight Information given the time range, arrival or departure, cargo or pessenger for different language versions
+Generate the list of Flight Information given the time range, arrival or departure, cargo or passenger for different language versions
 }

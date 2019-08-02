@@ -12,6 +12,9 @@ past_aqhi_url(year, month)
 \item{month}{month of the past record}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+URL for Past record of Air Quality Health Index
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en}
 Only available from Decemenber 2013 onward.
 }

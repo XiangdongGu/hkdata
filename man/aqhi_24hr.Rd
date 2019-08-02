@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_24hr}
 \alias{aqhi_24hr}
-\title{Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
+\title{Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours}
 \usage{
 aqhi_24hr(timestamp = NULL, lang = c("en", "tc", "sc"))
 }
@@ -16,5 +15,7 @@ be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-1306}
 }
 \description{
 Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 }

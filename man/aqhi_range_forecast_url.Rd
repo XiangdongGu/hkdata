@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_range_forecast_url}
 \alias{aqhi_range_forecast_url}
-\title{URL for Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
+\title{URL for Current Air Quality Health Index Range and Forecast}
 \usage{
 aqhi_range_forecast_url(lang = c("en", "tc", "sc"))
 }
@@ -13,5 +12,7 @@ aqhi_range_forecast_url(lang = c("en", "tc", "sc"))
 }
 \description{
 URL for Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 }

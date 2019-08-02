@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_current}
 \alias{aqhi_current}
-\title{Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
+\title{Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations}
 \usage{
 aqhi_current(timestamp = NULL, lang = c("en", "tc", "sc"))
 }
@@ -16,5 +15,7 @@ it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100}
 }
 \description{
 Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 }

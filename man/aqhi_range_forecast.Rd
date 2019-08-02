@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_range_forecast}
 \alias{aqhi_range_forecast}
-\title{Retrieve Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
+\title{Retrieve Current Air Quality Health Index Range and Forecast}
 \usage{
 aqhi_range_forecast(timestamp = NULL, lang = c("en", "tc", "sc"))
 }
@@ -16,5 +15,7 @@ it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100}
 }
 \description{
 Retrieve Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 }

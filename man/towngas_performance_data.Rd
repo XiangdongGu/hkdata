@@ -15,5 +15,8 @@ towngas_performance_data(fromYear, toYear = fromYear, path = NULL)
 will not be saved}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+Retrieve Towngas Environmental Performance Data
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/towngas-towngas-environment}
 }

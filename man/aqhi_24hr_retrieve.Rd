@@ -3,9 +3,7 @@
 \name{aqhi_24hr_retrieve}
 \alias{aqhi_24hr_retrieve}
 \title{Retrieve Air Quality Health Index (AQHI) at individual general and roadside
-Air Quality Monitoring stations for the past 24 hours
-Reference:
-https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
+Air Quality Monitoring stations for the past 24 hours}
 \usage{
 aqhi_24hr_retrieve(data_url)
 }
@@ -16,6 +14,7 @@ hist_file_url() for a given timestamp}
 \description{
 Retrieve Air Quality Health Index (AQHI) at individual general and roadside
 Air Quality Monitoring stations for the past 24 hours
-Reference:
-https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 }

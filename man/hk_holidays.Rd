@@ -14,6 +14,9 @@ will not be saved}
 "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal
+Retrieve Hong Kong Public Holidays Data
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal}
 1823 currently provides data of Hong Kong Public Holidays for 2018-2020.
 }
