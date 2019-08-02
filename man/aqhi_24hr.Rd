@@ -5,11 +5,14 @@
 \title{Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 \usage{
-aqhi_24hr(timestamp = NULL)
+aqhi_24hr(timestamp = NULL, lang = c("en", "tc", "sc"))
 }
 \arguments{
-\item{timestamp}{if null then current, otherwise historical weather
-it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100}
+\item{timestamp}{if null then current, otherwise historical weather it should
+be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-1306}
+
+\item{lang}{select the language of the available data, available choices are
+"en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese}
 }
 \description{
 Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours

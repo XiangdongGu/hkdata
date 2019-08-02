@@ -190,7 +190,7 @@ infectious_diseases <- function(year, path = NULL) {
 
 #' Get Base URL for "Department of Health: Flu Express's Figures Data"
 #' 
-#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season. \c
+#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season.
 #' \cr
 #' UPDATE FREQUENCY: WEEKLY
 #' 
@@ -203,7 +203,7 @@ flu_surveillance_url <- function() {
 
 #' Retrieve Data for "Department of Health: Flu Express's Figures Data"
 #' 
-#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season. \c
+#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season.
 #' \cr
 #' UPDATE FREQUENCY: WEEKLY
 #' 
@@ -266,7 +266,7 @@ flu_surveillance_retrieve <- function(url, path = ".", keep = FALSE) {
 
 #' Get Data for "Department of Health: Flu Express's Figures Data"
 #' 
-#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season. \c
+#' Influenza surveillance data including sentinel surveillance, laboratory surveillance, influenza-like illness outbreak, hospital surveillance and severe influenza case during influenza season.
 #' \cr
 #' UPDATE FREQUENCY: WEEKLY
 #' 
@@ -285,11 +285,11 @@ flu_surveillance_retrieve <- function(url, path = ".", keep = FALSE) {
 #' * `n_inf_lab_surv_b`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - B\cr
 #' * `n_inf_lab_surv_c`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - C\cr
 #' * `n_inf_lab_surv_all_subtypes`: Laboratory surveillance - No. of positive detections of seasonal influenza viruses - All subtypes\cr
-#' * `pct_inf_lab_surv_a_h1`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H1)\cr
-#' * `pct_inf_lab_surv_a_h3`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - A(H3)\cr
-#' * `pct_inf_lab_surv_b`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - B\cr
-#' * `pct_inf_lab_surv_c`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - C\cr
-#' * `pct_inf_lab_surv_all_subtypes`: Laboratory surveillance - Positive% for influenza among all respiratory specimens - All subtypes\cr
+#' * `pct_inf_lab_surv_a_h1`: Laboratory surveillance - Positive\% for influenza among all respiratory specimens - A(H1)\cr
+#' * `pct_inf_lab_surv_a_h3`: Laboratory surveillance - Positive\% for influenza among all respiratory specimens - A(H3)\cr
+#' * `pct_inf_lab_surv_b`: Laboratory surveillance - Positive\% for influenza among all respiratory specimens - B\cr
+#' * `pct_inf_lab_surv_c`: Laboratory surveillance - Positive\% for influenza among all respiratory specimens - C\cr
+#' * `pct_inf_lab_surv_all_subtypes`: Laboratory surveillance - Positive\% for influenza among all respiratory specimens - All subtypes\cr
 #' * `n_ili_scl_inst`: No. of ILI outbreaks in schools/institutions\cr
 #' * `rate_inf_pub_hosp_0_5`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 0-5 years\cr
 #' * `rate_inf_pub_hosp_6_11`: Admission rates in public hospitals with principal diagnosis of influenza (per 10,000 people in the age group) - 6-11 years\cr
@@ -468,7 +468,7 @@ ae_wait_time_retrieve <- function(data_url, path = NULL) {
 #' 
 #' @param timestamp if null then current, otherwise historical waiting time
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20190101-2315
-#' minutes %M only available at 0, 15, 30, 45
+#' minutes \%M only available at 0, 15, 30, 45
 #' @param path path to save the file
 #' 
 #' @source <https://data.gov.hk/en-data/dataset/hospital-hadata-ae-waiting-time>

@@ -4,7 +4,7 @@
 \alias{get_file_jpg}
 \title{Get jpg format file}
 \usage{
-get_file_jpg(url, path = ".", view = TRUE)
+get_file_jpg(url, path = ".", view = TRUE, silent = TRUE)
 }
 \arguments{
 \item{url}{the url of the file}
@@ -12,6 +12,8 @@ get_file_jpg(url, path = ".", view = TRUE)
 \item{path}{the directory to save the file}
 
 \item{view}{if TRUE the the file is viewed after download}
+
+\item{silient}{whether or not silent message}
 }
 \description{
 Get jpg format file

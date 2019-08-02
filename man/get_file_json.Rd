@@ -4,13 +4,15 @@
 \alias{get_file_json}
 \title{Get json format file}
 \usage{
-get_file_json(url, path = NULL)
+get_file_json(url, path = NULL, silent = TRUE)
 }
 \arguments{
 \item{url}{the url of the file}
 
 \item{path}{the directory where the file should be save, if NULL it
 will not save}
+
+\item{silient}{whether or not silent message}
 }
 \value{
 it returns a data read from the json file
