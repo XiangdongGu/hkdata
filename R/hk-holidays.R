@@ -1,6 +1,6 @@
 #' Retrieve Hong Kong Public Holidays Data
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal}
 #' 1823 currently provides data of Hong Kong Public Holidays for 2018-2020.
 #' 
 #' @param lang select the language of the available data, available choices are
@@ -19,7 +19,7 @@ hk_holidays_url <- function(lang = c("en", "tc", "sc")) {
 
 #' Retrieve Hong Kong Public Holidays Data
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-effo-statistic-cal}
 #' 1823 currently provides data of Hong Kong Public Holidays for 2018-2020.
 #'
 #' @param path the directory where the raw file should be save, if NULL it
