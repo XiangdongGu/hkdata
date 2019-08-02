@@ -240,7 +240,7 @@ hkia_long_term_provisional <- function(year, quarter, path = ".", keep = FALSE) 
       value = ifelse(value == "-", 0, value),
       value = as.numeric(value)
     ) %>%
-    select(insurer_eng, insurer_chi, by_group = cat1, catetory = cat2,
+    select(insurer_eng, insurer_chi, by_group = cat1, category = cat2,
            value_type = cat3, value)
   
   L3 <- L3 %>% 
