@@ -31,12 +31,14 @@ No Table_ID Table_Keywords Table_Description \cr
 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English] \cr
 \cr
 2) or search by keywords: \cr
-ethnicity, language, age, sex, economic_activity_status \cr
+ethnicity, language, age_group, sex, economic_activity_status \cr
 industry, occupation, monthly_income \cr
 household_income, household_size, household_composition, quarter_type
 }
 \examples{
  
-hk_census_stpug(table_id = "A501")
+hk_census_stpug(table_id = "D401")
+hk_census_stpug(keyword = "household_size")
 hk_census_stpug(keyword = "household_income")
+hk_census_stpug(keyword = "monthly_income")
 }

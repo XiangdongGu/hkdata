@@ -5,7 +5,8 @@
 # Air Quality Health Index ------------------------------------------------
 
 #' URL for Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param lang select the language of the available data, available choices are
 #'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
@@ -23,8 +24,9 @@ aqhi_24hr_url <- function(lang = c("en", "tc", "sc")) {
 
 #' Retrieve Air Quality Health Index (AQHI) at individual general and roadside
 #' Air Quality Monitoring stations for the past 24 hours
-#' Reference:
-#' https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references
+#' \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param data_url the url to the specific file, e.g. as returned by
 #'   hist_file_url() for a given timestamp
@@ -58,7 +60,8 @@ aqhi_24hr_retrieve <- function(data_url) {
 }
 
 #' Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param timestamp if null then current, otherwise historical weather it should
 #'   be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-1306
@@ -75,7 +78,8 @@ aqhi_24hr <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
 # Past 24-hour Pollutant Concentration ------------------------------------
 
 #' URL for Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
 #'
 #' @param lang select the language of the available data, available choices are
 #'   "en" for English
@@ -88,7 +92,8 @@ pollutant_24hr_url <- function(lang = "en") {
 }
 
 #' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
 #'
 #' @param data_url the url to the specific file, e.g. as returned by
 #'   hist_file_url() for a given timestamp
@@ -122,7 +127,8 @@ pollutant_24hr_retrieve <- function(data_url) {
 }
 
 #' Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
 #'
 #' @param timestamp if null then current, otherwise historical weather
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
@@ -136,7 +142,8 @@ pollutant_24hr <- function(timestamp = NULL) {
 # Current Air Quality Health Index ----------------------------------------
 
 #' URL for Current Air Quality Health Index of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param lang select the language of the available data, available choices are
 #'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
@@ -153,7 +160,8 @@ aqhi_current_url <- function(lang = c("en", "tc", "sc"))  {
 }
 
 #' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param data_url the url to the specific file, e.g. as returned by
 #'   hist_file_url() for a given timestamp
@@ -206,7 +214,8 @@ aqhi_current_retrieve <- function(data_url) {
 }
 
 #' Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 #'
 #' @param timestamp if null then current, otherwise historical weather
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
@@ -222,7 +231,8 @@ aqhi_current <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
 # Current Air Quality Health Index Range and Forecast ---------------------
 
 #' URL for Current Air Quality Health Index Range and Forecast
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 #'
 #' @param lang select the language of the available data, available choices are
 #'   "en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese
@@ -239,7 +249,8 @@ aqhi_range_forecast_url <- function(lang = c("en", "tc", "sc")) {
 }
 
 #' Retrieve Current Air Quality Health Index Range and Forecast
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 #'
 #' @param data_url the url to the specific file, e.g. as returned by
 #'   hist_file_url() for a given timestamp
@@ -330,7 +341,8 @@ aqhi_range_forecast_retrieve <- function(data_url) {
 }
 
 #' Retrieve Current Air Quality Health Index Range and Forecast
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+#' 
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 #'
 #' @param timestamp if null then current, otherwise historical weather
 #' it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20180905-0100
@@ -347,7 +359,7 @@ aqhi_range_forecast <- function(timestamp = NULL, lang = c("en", "tc", "sc")) {
 
 #' URL for Past hourly record of Air Pollution Index at a given year and month
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en}
 #' Only available from July 1999 to Decemenber 2013.
 #'
 #' @param year year of the past record
@@ -366,7 +378,7 @@ past_pollution_index_url <- function(year, month) {
 
 #' Retrieve Past hourly record of Air Pollution Index at a given year and month
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en}
 #' Only available from July 1999 to Decemenber 2013.
 #'
 #' @param year year of the past record
@@ -404,7 +416,7 @@ past_pollution_index <- function(year, month, path = NULL) {
 
 #' URL for Past record of Air Quality Health Index
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en}
 #' Only available from Decemenber 2013 onward.
 #'
 #' @param year year of the past record
@@ -424,7 +436,7 @@ past_aqhi_url <- function(year, month) {
 
 #' Retrieve Past record of Air Quality Health Index
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en}
 #' Only available from Decemenber 2013 onward.
 #'
 #' @param year year of the past record
@@ -462,7 +474,7 @@ past_aqhi <- function(year, month, path = NULL) {
 
 #' URL for Towngas Environmental Performance Data
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+#' @references \url{https://data.gov.hk/en-data/dataset/towngas-towngas-environment}
 #'
 #' @param fromYear integer, the starting year of the performance data.
 #' @param toYear integer, the ending (inclusive) year of the performance data.
@@ -480,7 +492,7 @@ towngas_performance_data_url <- function(fromYear, toYear = fromYear) {
 
 #' Retrieve Towngas Environmental Performance Data
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+#' @references \url{https://data.gov.hk/en-data/dataset/towngas-towngas-environment}
 #'
 #' @param fromYear integer, the starting year of the performance data.
 #' @param toYear integer, the ending (inclusive) year of the performance data.
@@ -503,7 +515,7 @@ towngas_performance_data <- function(fromYear, toYear = fromYear, path = NULL) {
 
 #' URL for Real-time city data collected by multi-purpose lamp posts in Kowloon East
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data}
 #' Note that only the most update value is available.
 #' @export
 #'
@@ -513,7 +525,7 @@ lamp_posts_data_url <- function() {
 
 #' Retrieve Real-time city data collected by multi-purpose lamp posts in Kowloon East
 #' 
-#' Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
+#' @references \url{https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data}
 #' Note that only the most update value is available.
 #'
 #'#' @param path the directory where the raw file should be save, if NULL it

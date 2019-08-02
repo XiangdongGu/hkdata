@@ -12,5 +12,8 @@ towngas_performance_data_url(fromYear, toYear = fromYear)
 \item{toYear}{integer, the ending (inclusive) year of the performance data.}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/towngas-towngas-environment
+URL for Towngas Environmental Performance Data
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/towngas-towngas-environment}
 }

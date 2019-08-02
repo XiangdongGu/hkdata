@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_current_url}
 \alias{aqhi_current_url}
-\title{URL for Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
+\title{URL for Current Air Quality Health Index of individual Air Quality Monitoring stations}
 \usage{
 aqhi_current_url(lang = c("en", "tc", "sc"))
 }
@@ -13,5 +12,7 @@ aqhi_current_url(lang = c("en", "tc", "sc"))
 }
 \description{
 URL for Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 }

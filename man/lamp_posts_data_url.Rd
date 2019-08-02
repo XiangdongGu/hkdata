@@ -7,6 +7,9 @@
 lamp_posts_data_url()
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
+URL for Real-time city data collected by multi-purpose lamp posts in Kowloon East
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data}
 Note that only the most update value is available.
 }

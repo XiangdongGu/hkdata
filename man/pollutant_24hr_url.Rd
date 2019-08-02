@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{pollutant_24hr_url}
 \alias{pollutant_24hr_url}
-\title{URL for Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
+\title{URL for Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations}
 \usage{
 pollutant_24hr_url(lang = "en")
 }
@@ -13,5 +12,7 @@ pollutant_24hr_url(lang = "en")
 }
 \description{
 URL for Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
 }

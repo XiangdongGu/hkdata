@@ -15,6 +15,9 @@ past_aqhi(year, month, path = NULL)
 will not be saved}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en
+Retrieve Past record of Air Quality Health Index
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-quality-health-index-en}
 Only available from Decemenber 2013 onward.
 }

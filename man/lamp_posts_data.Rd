@@ -7,10 +7,12 @@
 lamp_posts_data(path = NULL)
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data
-Note that only the most update value is available.
+Retrieve Real-time city data collected by multi-purpose lamp posts in Kowloon East
 }
-\details{
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-devb-mplp-mplp-sensor-data}
+Note that only the most update value is available.
+
 #' @param path the directory where the raw file should be save, if NULL it
 will not be saved
 }

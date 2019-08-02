@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_current_retrieve}
 \alias{aqhi_current_retrieve}
-\title{Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
+\title{Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations}
 \usage{
 aqhi_current_retrieve(data_url)
 }
@@ -13,5 +12,7 @@ hist_file_url() for a given timestamp}
 }
 \description{
 Retrieve Current Air Quality Health Index of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-aqhi-of-individual-air-quality-monitoring-stations}
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{pollutant_24hr_retrieve}
 \alias{pollutant_24hr_retrieve}
-\title{Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
+\title{Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations}
 \usage{
 pollutant_24hr_retrieve(data_url)
 }
@@ -13,5 +12,7 @@ hist_file_url() for a given timestamp}
 }
 \description{
 Retrieve Past 24-hour Pollutant Concentration of individual Air Quality Monitoring stations
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-pc-of-individual-air-quality-monitoring-stations}
 }

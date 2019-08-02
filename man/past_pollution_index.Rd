@@ -15,6 +15,9 @@ past_pollution_index(year, month, path = NULL)
 will not be saved}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+Retrieve Past hourly record of Air Pollution Index at a given year and month
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en}
 Only available from July 1999 to Decemenber 2013.
 }

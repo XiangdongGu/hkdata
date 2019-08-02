@@ -12,6 +12,9 @@ past_pollution_index_url(year, month)
 \item{month}{month of the past record}
 }
 \description{
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en
+URL for Past hourly record of Air Pollution Index at a given year and month
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-past-record-of-air-pollution-index-en}
 Only available from July 1999 to Decemenber 2013.
 }

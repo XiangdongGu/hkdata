@@ -2,8 +2,7 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_range_forecast_retrieve}
 \alias{aqhi_range_forecast_retrieve}
-\title{Retrieve Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
+\title{Retrieve Current Air Quality Health Index Range and Forecast}
 \usage{
 aqhi_range_forecast_retrieve(data_url)
 }
@@ -13,5 +12,7 @@ hist_file_url() for a given timestamp}
 }
 \description{
 Retrieve Current Air Quality Health Index Range and Forecast
-Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast
+}
+\references{
+\url{https://data.gov.hk/en-data/dataset/hk-epd-airteam-current-air-quality-health-index-range-and-forecast}
 }
