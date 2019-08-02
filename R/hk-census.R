@@ -41,6 +41,7 @@ hk_census_stpug <- function(table_id = NULL, keyword = NULL){
   require(rvest)
   require(dplyr)
   require(tidyverse)
+  require(scales)
   
   # find URL for all census data download
   url <- paste("https://data.gov.hk/en-data/dataset/",
