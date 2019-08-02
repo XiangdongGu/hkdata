@@ -11,9 +11,9 @@ library(plotly)
 
 Extract_FlightInfo_day <-function(Date){
   
-  test1 <- transport_Flight_retrieve(Date,FALSE,FALSE) # departure for pessengers
+  test1 <- transport_Flight_retrieve(Date,FALSE,FALSE) # departure for passengers
   
-  test2 <- transport_Flight_retrieve(Date,TRUE,FALSE) # arrival for pessengers
+  test2 <- transport_Flight_retrieve(Date,TRUE,FALSE) # arrival for passengers
   
   test3 <- transport_Flight_retrieve(Date,FALSE,TRUE) # departure for cargo
   
@@ -81,7 +81,7 @@ p5
 ######################################################################################################
 
 #For some day, say "2019-07-01", if some one is interested in the detailed information about the 
-#the destinations of pessengers, then we can easily retreive the data using the the wrapper function
+#the destinations of passengers, then we can easily retreive the data using the the wrapper function
 #in the library and then visualize the information in the map.
 
 
@@ -96,7 +96,7 @@ names(dff) <- c("AriportID","Name","City","Country","IATA","ICAO","Lat","Long","
 
 
 
-#Retrieve the data of departure for pessengers
+#Retrieve the data of departure for passengers
 
 test1 <- transport_Flight_retrieve("2019-07-01",FALSE,FALSE)
 
