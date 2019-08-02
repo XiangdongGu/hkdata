@@ -30,7 +30,8 @@ ui <- fluidPage(
   column(
     6,
     leafletOutput("map")
-  ))
+  )),
+  title = "Hong Kong Address Look Up"
 )
 
 server <- function(input, output) {
