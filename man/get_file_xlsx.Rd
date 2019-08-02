@@ -4,7 +4,7 @@
 \alias{get_file_xlsx}
 \title{Get xlsx format file}
 \usage{
-get_file_xlsx(url, path = ".", silent = FALSE)
+get_file_xlsx(url, path = ".", silent = TRUE)
 }
 \arguments{
 \item{url}{the url of the file}

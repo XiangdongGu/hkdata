@@ -2,17 +2,17 @@
 % Please edit documentation in R/hk-health.R
 \name{ae_wait_time}
 \alias{ae_wait_time}
-\title{Hospital Authority: Accident and Emergency Waiting Time by Hospital}
+\title{Get Data for "Hospital Authority: Accident and Emergency Waiting Time by Hospital"}
 \source{
 <https://data.gov.hk/en-data/dataset/hospital-hadata-ae-waiting-time>
 }
 \usage{
-ae_wait_time(timestamp = NULL, path = ".")
+ae_wait_time(timestamp = NULL, path = NULL)
 }
 \arguments{
 \item{timestamp}{if null then current, otherwise historical waiting time
 it should be in format of \%Y\%m\%d-\%H\%M, e.g. 20190101-2315
-minutes %M only available at 0, 15, 30, 45}
+minutes \%M only available at 0, 15, 30, 45}
 
 \item{path}{path to save the file}
 }
