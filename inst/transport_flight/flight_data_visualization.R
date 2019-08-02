@@ -7,9 +7,6 @@ library(plotly)
 #If we are interested in the flight data for some date, say "2019-07-01"
 #then we can easily retrieve the relevant data using the wrapper function in the library
 
-require(dplyr)
-require(plotly)
-
 #Definr a functuon to extract the flight count data for some day 
 
 Extract_FlightInfo_day <-function(Date){
