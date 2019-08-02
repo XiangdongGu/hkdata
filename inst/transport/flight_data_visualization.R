@@ -151,3 +151,75 @@ plot_geo(color = I("red")) %>%
          title = "Visualization of the Flight Departure on 2019-07-01",
          showlegend = FALSE)
 
+######################################################################################################
+
+#For some day, say "2019-07-01", if some one is interested in the detailed information about the 
+#the flight cargo arrival, then we can easily retreive the data using the the wrapper function
+#in the library and then visualize the information in the map.
+
+
+
+#Get Longitude and Latitude information from another open data
+#Please refer to https://openflights.org/data.html
+
+dff <- read.csv("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat",
+                header = FALSE)
+
+names(dff) <- c("AriportID","Name","City","Country","IATA","ICAO","Lat","Long","Alt","TZ","DST","Tz","Type","Source")
+
+
+
+#Retrieve the data of arrival of cargos
+
+test2 <- transport_Flight_retrieve("2019-07-01",TRUE,TRUE)
+
+#save the information of related worldwide airports
+test2.1   <- test2 %>%
+  select(time,origin) %>%
+  distinct() %>%
+  group_by(origin) %>%
+  summarise(cnt = n()) %>%
+  left_join(dff,by=c("origin"="IATA")) %>%
+  select("origin","Name","City","Lat","Long","cnt")
+
+#save the geographic information about the airlines 
+test2.2 <- test2 %>%
+  select(time,origin) %>%
+  distinct() %>%
+  left_join(dff,by=c("origin"="IATA")) %>%
+  select("origin","Lat","Long") %>%
+  mutate(Lat1 = dff[2916,c("Lat")], Long1 = dff[2916,c("Long")])
+
+
+
+# airport locations
+air <- test2.1
+# flights between airports
+flights <- test2.2
+flights$id <- seq_len(nrow(flights))
+
+# map projection
+geo <- list(
+  projection = list(
+    type = 'orthographic',
+    rotation = list(lon = -100, lat = 40, roll = 0)
+  ),
+  showland = TRUE,
+  landcolor = toRGB("gray95"),
+  countrycolor = toRGB("gray80")
+)
+
+plot_geo(color = I("green")) %>%
+  add_markers(
+    data = air, x = ~Long, y = ~Lat, text = ~Name,
+    size = ~cnt, hoverinfo = "text", alpha = 0.5
+  ) %>%
+  add_segments(
+    data = group_by(flights, id),
+    x = ~Long1, xend = ~Long,
+    y = ~Lat1, yend = ~Lat,
+    alpha = 0.3, size = I(1), hoverinfo = "none"
+  ) %>%
+  layout(geo = geo, 
+         title = "Visualization of the Flight Cargo Arrival on 2019-07-01",
+         showlegend = FALSE)
