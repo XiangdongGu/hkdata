@@ -24,13 +24,15 @@
 #' 11	E501	Occupied Quarters (Land) by Type of Quarters and Small Tertiary Planning Unit Group, 2006 (E501) [English] \cr
 #' \cr
 #' 2) or search by keywords: \cr
-#' ethnicity, language, age, sex, economic_activity_status \cr
+#' ethnicity, language, age_group, sex, economic_activity_status \cr
 #' industry, occupation, monthly_income \cr
 #' household_income, household_size, household_composition, quarter_type
 
 #' @examples  
-#' hk_census_stpug(table_id = "A501")
+#' hk_census_stpug(table_id = "D401")
+#' hk_census_stpug(keyword = "household_size")
 #' hk_census_stpug(keyword = "household_income")
+#' hk_census_stpug(keyword = "monthly_income")
 
 #' @export 
 #' 
@@ -165,6 +167,7 @@ search_list <- cbind(tbl = names(keywords_list), keywords, by_tpu) %>%
   select(- starts_with("V")) %>%
   mutate(tbl = as.character(tbl))
 
+# 1 output data
 if (!is.null(table_id)){
   table_ids <- c("A501", "A502", "A503", "C501", "C502", "C503", "C504",
                  "D401", "D402", "D403", "E501")
@@ -185,20 +188,72 @@ if (!is.null(keyword)){
   search_tbl <- get(search_tbl_name)
 }
 
+# 2 output charts
+cate <- colnames(search_tbl[2])
+# pie chart
+pie <- search_tbl %>%
+  group_by(category = get(colnames(search_tbl[2]))) %>%
+  summarise(tot_number = sum(get(colnames(search_tbl[3])), na.rm = TRUE)) %>%
+  ggplot(aes(x = "",
+             y = tot_number,
+             fill = category)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start=0) +
+  xlab("") +
+  labs(title = paste(cate,"percentage pie chart")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  geom_text(aes(label = scales::percent(tot_number / sum(tot_number))),
+            position = position_stack(vjust = 0.5))
+
 # density plot
-x <- search_tbl %>%
+dp <- search_tbl %>%
   ggplot(aes(get(colnames(search_tbl[3])))) +
   facet_wrap(~ get(colnames(search_tbl[2])), scales = "free") +
-  geom_density()
+  # geom_density()
+  geom_histogram(bins = 10)
 
-return(list(search_tbl,x))
+dp1 <- search_tbl %>%
+  spread(key = get(colnames(search_tbl[2])), value = get(colnames(search_tbl[3])))
+dp2 <- dp1[-1]/rowSums(dp1[-1])
+dp3 <- cbind(dp1[1],dp2) %>% gather(key = "category", value = "value", - stpug)
+dp <- dp3 %>%
+  ggplot(aes(get(colnames(dp3[3])))) +
+  facet_wrap(~ get(colnames(dp3[2])), scales = "free") +
+  geom_density() +
+  scale_x_continuous(labels = percent) +
+  labs(title = paste(cate," density chart of each category"), x = NULL) 
+
+return(list(search_tbl,pie,dp))
 }
 
 
+# income analysis 
+dt <- hk_census_stpug(table_id = "D403")[[1]]
+
+tmp <- dt %>% 
+  spread(key = monthly_domestic_household_income, value = domestic_households_number)
+tmp2 <- tmp[-1] / rowSums(tmp[-1]) * 100
+tmp3 <- cbind(tmp[1], tmp2[c(1,2,11)])
+names(tmp3) <- c("stpug", "low_income_pctg", "median_income_pctg", "high_income_pctg")
+tmp3 <- tmp3 %>% 
+  mutate(low_income_pctg = ifelse(is.na(low_income_pctg),0,low_income_pctg))
+
+x <- c("low", "median", "high")
+y <- sprintf("{point.%s}", c("low_income_pctg", 
+                             "median_income_pctg", 
+                             "high_income_pctg"))
+tltip <- tooltip_table(x, y)
+
+hchart(tmp3, type = "columnrange",
+       hcaes(x = stpug, low = low_income_pctg, high = high_income_pctg,
+             color = median_income_pctg)) %>% 
+  hc_chart(polar = TRUE) %>%
+  hc_yAxis( max = 100, min = -10, labels = list(format = "{value} %"),
+            showFirstLabel = FALSE) %>% 
+  hc_xAxis(
+    title = list(text = "income difference between highest and lowest"), 
+    gridLineWidth = 1,
+    labels = FALSE) 
 
 
-
-
-
-
-
+  
