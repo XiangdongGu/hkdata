@@ -2,12 +2,16 @@
 % Please edit documentation in R/hk-pollution.R
 \name{aqhi_24hr_url}
 \alias{aqhi_24hr_url}
-\title{Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
+\title{URL for Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations}
 \usage{
-aqhi_24hr_url(lang = "en")
+aqhi_24hr_url(lang = c("en", "tc", "sc"))
+}
+\arguments{
+\item{lang}{select the language of the available data, available choices are
+"en" for English, "tc" for traditional Chinese, "sc" for simplified Chinese}
 }
 \description{
-Retrieve Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
+URL for Air Quality Health Index (AQHI) at individual general and roadside Air Quality Monitoring stations for the past 24 hours
 Reference: https://data.gov.hk/en-data/dataset/hk-epd-airteam-past24hr-aqhi-of-individual-air-quality-monitoring-stations
 }

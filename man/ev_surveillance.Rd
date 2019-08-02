@@ -2,18 +2,18 @@
 % Please edit documentation in R/hk-health.R
 \name{ev_surveillance}
 \alias{ev_surveillance}
-\title{Department of Health: EV Scan's Figures Data}
-\format{A data frame with 11 variables.
-* `year`: Year
-* `week`: Week
-* `from`: From (Date)
-* `to`: To (Date)
-* `n_ev71`: Number of EV71 cases by week
-* `n_hfmd_inst`: Number of HFMD institutional outbreaks by week
-* `n_hfmd_hosp_adm`: Number of hospital admission episodes of HFMD by week
-* `rate_hfmd_aed`: Accident & Emergency Department surveillance of HFMD syndrome group (per 1000 coded cases)
-* `prop_hfmd_ccc_kg`: Proportion of child care centres/kindergartens (CCC/KG) with HFMD cases based on HFMD sentinel surveillance at CCC/KG by week
-* `rate_hfmd_pvt_med`: Consultation rate for HFMD based on HFMD sentinel surveillance among private medical practitioner clinics by week (per 1000 consultations) 
+\title{Get Data for "Department of Health: EV Scan's Figures Data"}
+\format{A data frame with 11 variables.\cr
+* `year`: Year\cr
+* `week`: Week\cr
+* `from`: From (Date)\cr
+* `to`: To (Date)\cr
+* `n_ev71`: Number of EV71 cases by week\cr
+* `n_hfmd_inst`: Number of HFMD institutional outbreaks by week\cr
+* `n_hfmd_hosp_adm`: Number of hospital admission episodes of HFMD by week\cr
+* `rate_hfmd_aed`: Accident & Emergency Department surveillance of HFMD syndrome group (per 1000 coded cases)\cr
+* `prop_hfmd_ccc_kg`: Proportion of child care centres/kindergartens (CCC/KG) with HFMD cases based on HFMD sentinel surveillance at CCC/KG by week\cr
+* `rate_hfmd_pvt_med`: Consultation rate for HFMD based on HFMD sentinel surveillance among private medical practitioner clinics by week (per 1000 consultations) \cr
 * `rate_hfmd_gopc`: Consultation rate for HFMD based on HFMD sentinel surveillance among General Out-patient Clinics by week (per 1000 consultations)}
 \source{
 <https://data.gov.hk/en-data/dataset/hk-dh-chpsebcdde-ev-scan>

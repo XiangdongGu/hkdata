@@ -4,13 +4,16 @@
 \alias{get_file_csv}
 \title{Get csv format file}
 \usage{
-get_file_csv(url, path = NULL, col_names = TRUE, col_types = NULL)
+get_file_csv(url, path = NULL, col_names = TRUE, col_types = NULL,
+  silent = TRUE)
 }
 \arguments{
 \item{url}{the url of the file}
 
 \item{path}{the directory where the file should be save, if NULL it
 will not save}
+
+\item{silient}{whether or not silent message}
 }
 \value{
 it returns a data frame read from the csv file
